@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Simple HTML Page</title>
     <style>
+        /* Hide the scrollbar */
+        html, body {
+            height: 100%; /* Ensure full height */
+            margin: 0;
+            overflow: hidden; /* Hides the scrollbar */
+        }
+
         body {
             display: flex;
             flex-direction: column;
@@ -14,8 +21,8 @@
             margin: 0;
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: black; /* Hintergrundfarbe auf schwarz gesetzt */
-            color: red; /* Schriftfarbe auf rot gesetzt */
+            background-color: black; /* Black background */
+            color: red; /* Red text color */
         }
 
         h1 {
@@ -34,13 +41,13 @@
             50% { opacity: 0; }
         }
 
-        /* Media Query für kleinere Geräte */
+        /* Media Query for smaller devices */
         @media (max-width: 600px) {
             h1 {
-                font-size: 100px;  /* kleinere Schriftgröße auf mobilen Geräten */
+                font-size: 100px; /* smaller font size on mobile devices */
             }
             .blinking {
-                font-size: 12px;  /* kleinere blinkende Schrift auf mobilen Geräten */
+                font-size: 12px; /* smaller blinking font on mobile devices */
             }
         }
     </style>
