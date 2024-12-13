@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shit I broke the Internet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Simple HTML Page</title>
     <style>
         body {
             display: flex;
@@ -13,6 +13,7 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            text-align: center;
         }
         h1 {
             font-size: 200px;
@@ -26,6 +27,16 @@
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
+        }
+
+        /* Media Query für kleinere Geräte */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 100px;  /* kleinere Schriftgröße auf mobilen Geräten */
+            }
+            .blinking {
+                font-size: 12px;  /* kleinere blinkende Schrift auf mobilen Geräten */
+            }
         }
     </style>
 </head>
