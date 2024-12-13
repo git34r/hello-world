@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Simple HTML Page</title>
     <style>
-        /* Hide the scrollbar */
+        /* Hide the scrollbar but keep scrolling enabled */
         html, body {
-            height: 100%; /* Ensure full height */
+            height: 100%;
             margin: 0;
-            overflow: hidden; /* Hides the scrollbar */
+            overflow: hidden; /* Prevent default scrollbars */
         }
 
         body {
@@ -17,12 +17,13 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 100%;
             margin: 0;
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: black; /* Black background */
             color: red; /* Red text color */
+            overflow-y: scroll; /* Allow vertical scrolling */
         }
 
         h1 {
