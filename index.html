@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Simple HTML Page</title>
+    <title>Simple HTML Page with Background Music</title>
     <style>
         body {
             display: flex;
@@ -15,15 +15,58 @@
             font-family: Arial, sans-serif;
             text-align: center;
         }
+
+        /* Header oben hinzufügen */
+        header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        /* Großbuchstaben "BONPIT", das sich horizontal über den Bildschirm erstreckt */
+        .stretching-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 8vw; /* Dynamische Schriftgröße basierend auf der Breite des Bildschirms */
+            font-weight: bold;
+            color: lightgray;
+            text-transform: uppercase;
+            animation: stretch 5s infinite linear;
+            white-space: nowrap; /* Verhindert Umbrüche */
+        }
+
+        @keyframes stretch {
+            0% {
+                transform: scaleX(1); /* Anfangszustand */
+            }
+            50% {
+                transform: scaleX(1.2); /* Verzieht sich, streckt sich horizontal */
+            }
+            100% {
+                transform: scaleX(1); /* Zurück in den normalen Zustand */
+            }
+        }
+
         h1 {
             font-size: 200px;
             margin: 0;
             text-transform: lowercase;
         }
+
         .blinking {
             font-size: 14px;
             animation: blink 1s infinite;
         }
+
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
@@ -41,7 +84,22 @@
     </style>
 </head>
 <body>
+    <!-- Header oben hinzufügen -->
+    <header>
+        <h2>Welcome to My Website</h2>
+        <p>Enjoy the music and the visuals!</p>
+    </header>
+
+    <!-- Hintergrund Audio -->
+    <audio autoplay loop>
+        <source src="your-audio-file.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <!-- Dynamisch verziehende Schrift "BONPIT" -->
+    <div class="stretching-text">BONPIT</div>
+
     <h1>hello-world</h1>
-    <div class="blinking">(i-hate-music)</div>
+    <div class="blinking">i-hate-music</div>
 </body>
 </html>
