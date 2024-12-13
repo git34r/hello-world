@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Simple HTML Page</title>
     <style>
         body {
@@ -16,47 +16,61 @@
             text-align: center;
         }
 
-        /* Das BONPIT-Textfeld oben in der Mitte */
+        /* Schrift "BONPIT" die sich über die gesamte Bildschirmbreite erstreckt */
         .stretching-text {
             position: absolute;
-            top: 20px;  /* Etwas Abstand vom oberen Rand */
+            top: 0;
             left: 0;
-            width: 100%;
+            width: 100%;  /* Die Schrift nimmt die gesamte Breite des Bildschirms ein */
             text-align: center;
-            font-size: 10vw; /* Dynamische Schriftgröße */
+            font-size: 10vw; /* Die Schriftgröße basiert auf der Breite des Viewports */
             font-weight: bold;
             color: lightgray;
             text-transform: uppercase;
             white-space: nowrap;  /* Verhindert Umbrüche */
-            animation: stretch 4s infinite alternate; /* Animation */
+            padding-top: 20px;  /* Etwas Abstand von oben */
         }
 
-        /* Die Animation für das Strecken des Texts */
-        @keyframes stretch {
-            0% {
-                transform: scaleX(1); /* Originalgröße */
-            }
-            50% {
-                transform: scaleX(1.2); /* Horizontal strecken */
-            }
-            100% {
-                transform: scaleX(1); /* Zurück zur Originalgröße */
-            }
-        }
-
+        /* Text "hello-world" */
         h1 {
             font-size: 200px;
             margin: 0;
             text-transform: lowercase;
         }
+
+        /* Blinkender Text "(i-hate-music)" */
+        .blinking {
+            font-size: 14px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Media Query für kleinere Geräte */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 100px;  /* kleinere Schriftgröße auf mobilen Geräten */
+            }
+            .blinking {
+                font-size: 12px;  /* kleinere blinkende Schrift auf mobilen Geräten */
+            }
+            .stretching-text {
+                font-size: 16vw;  /* größere Schrift auf kleineren Geräten */
+            }
+        }
     </style>
 </head>
 <body>
-
-    <!-- Dynamischer "BONPIT"-Text -->
+    <!-- Dynamischer "BONPIT"-Text, der sich über den Bildschirm erstreckt -->
     <div class="stretching-text">BONPIT</div>
-
+    
+    <!-- Der "hello-world" Text -->
     <h1>hello-world</h1>
-
+    
+    <!-- Der blinkende Text -->
+    <div class="blinking">(i-hate-music)</div>
 </body>
 </html>
