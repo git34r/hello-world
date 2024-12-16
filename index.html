@@ -8,7 +8,7 @@
         body {
             display: flex;
             flex-direction: column;
-            justify-content: space-around; /* Distribute elements evenly */
+            justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -16,16 +16,13 @@
             text-align: center;
             background-color: black;
             color: red;
-            padding: 100px 0; /* Space at the top and bottom */
-            box-sizing: border-box;
         }
 
         h1 {
-            font-size: 10vw; /* Scales headline based on the width of the viewport */
+            font-size: 65px; /* Increased size by 5px */
             margin: 0;
             text-transform: lowercase;
-            animation: stretch 2s infinite alternate, pulse 5s infinite;
-            padding: 0 5vw; /* Adjust padding to create consistent spacing on the sides */
+            animation: stretch 2s infinite alternate, pulse 5s infinite; /* Added pulse animation */
         }
 
         @keyframes stretch {
@@ -42,10 +39,9 @@
         a {
             text-decoration: underline;
             color: red;
-            font-size: 4vw; /* Scales the link text based on viewport width */
-            margin: 2vh 0; /* Vertical margin relative to the viewport height */
+            font-size: 20px;
+            margin: 50px 0; /* Increased margin between links */
             transition: color 0.3s;
-            padding: 0 2vw; /* Horizontal padding for consistent spacing */
         }
 
         a:hover {
@@ -53,11 +49,11 @@
         }
 
         .email a {
-            font-size: 6vw; /* Scales the email size according to the viewport width */
+            font-size: 30px; /* Decreased email size by 5px */
             color: red;
             text-transform: lowercase;
-            margin-top: 3vh;
-            text-decoration: none;
+            margin-top: 10px;
+            text-decoration: none; /* Remove underline by default */
             transition: text-decoration 0.3s;
         }
 
@@ -65,12 +61,12 @@
             text-decoration: underline; /* Underline on hover */
         }
 
+        /* Bookings & Inquiries Text */
         .bookings {
-            font-size: 3vw; /* Scales bookings text based on the viewport width */
+            font-size: 15px;
             color: red;
-            margin-top: 3vh; /* Adjusted margin with viewport height */
+            margin-top: 35px; /* Reduced margin between bookings and email */
             text-transform: uppercase;
-            padding: 0 2vw; /* Padding to maintain consistent spacing */
         }
     </style>
 </head>
