@@ -2,65 +2,67 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shit I broke the Internet</title>
     <style>
         body {
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Adjust content spacing */
+            justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: black; 
-            color: red; 
+            background-color: black;
+            color: red;
         }
 
         h1 {
-            font-size: 200px;
+            font-size: 50px;
             margin: 0;
             text-transform: lowercase;
+            animation: stretch 2s infinite alternate;
         }
 
-        .blinking {
-            font-size: 14px;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+        @keyframes stretch {
+            0% { transform: scaleY(1); }
+            100% { transform: scaleY(1.2); }
         }
 
         a {
-            text-decoration: none; /* Remove underline */
-            color: #00FF00; /* Green link color */
-            font-size: 20px;
-            margin-top: 20px;
+            text-decoration: none;
+            color: red;
+            font-size: 24px;
+            margin: 10px;
             transition: color 0.3s;
         }
 
         a:hover {
-            color: #00CC00; /* Darker green on hover */
+            color: darkred;
         }
 
-        /* Media Query für kleinere Geräte */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 100px;  /* kleinere Schriftgröße auf mobilen Geräten */
-            }
-            .blinking {
-                font-size: 12px;  /* kleinere blinkende Schrift auf mobilen Geräten */
-            }
+        .email {
+            font-size: 30px;
+            color: red;
+            text-transform: lowercase;
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
+    <!-- Headline -->
     <h1>hello-world</h1>
-    <div class="blinking">(i-hate-music)</div>
-    <!-- Clickable link added below everything -->
-    <a href="https://www.example.com" target="_blank">Click here for more</a>
+
+    <!-- Clickable links -->
+    <div>
+        <a href="https://www.example1.com" target="_blank">1</a>
+        <a href="https://www.example2.com" target="_blank">2</a>
+        <a href="https://www.example3.com" target="_blank">3</a>
+        <a href="https://www.example4.com" target="_blank">4</a>
+    </div>
+
+    <!-- Contact email -->
+    <div class="email">mgmt@bonpit.com</div>
 </body>
 </html>
