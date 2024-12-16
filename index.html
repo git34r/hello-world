@@ -8,7 +8,7 @@
         body {
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* This ensures that the content is spread out */
+            justify-content: space-around; /* Distribute elements evenly */
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -21,10 +21,11 @@
         }
 
         h1 {
-            font-size: 10vw; /* Responsive scaling based on viewport width */
+            font-size: 10vw; /* Scales headline based on the width of the viewport */
             margin: 0;
             text-transform: lowercase;
             animation: stretch 2s infinite alternate, pulse 5s infinite;
+            padding: 0 5vw; /* Adjust padding to create consistent spacing on the sides */
         }
 
         @keyframes stretch {
@@ -41,9 +42,10 @@
         a {
             text-decoration: underline;
             color: red;
-            font-size: 4vw; /* Scales the links according to the viewport width */
-            margin: 3vh 0; /* Vertical margin based on viewport height */
+            font-size: 4vw; /* Scales the link text based on viewport width */
+            margin: 2vh 0; /* Vertical margin relative to the viewport height */
             transition: color 0.3s;
+            padding: 0 2vw; /* Horizontal padding for consistent spacing */
         }
 
         a:hover {
@@ -66,8 +68,9 @@
         .bookings {
             font-size: 3vw; /* Scales bookings text based on the viewport width */
             color: red;
-            margin-top: 5vh; /* Adjusted margin with viewport height */
+            margin-top: 3vh; /* Adjusted margin with viewport height */
             text-transform: uppercase;
+            padding: 0 2vw; /* Padding to maintain consistent spacing */
         }
     </style>
 </head>
