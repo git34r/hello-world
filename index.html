@@ -8,14 +8,14 @@
         body {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between; /* Adjust content spacing */
             align-items: center;
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: black; /* Hintergrundfarbe auf schwarz gesetzt */
-            color: red; /* Schriftfarbe auf rot gesetzt */
+            background-color: black; 
+            color: red; 
         }
 
         h1 {
@@ -34,6 +34,18 @@
             50% { opacity: 0; }
         }
 
+        a {
+            text-decoration: none; /* Remove underline */
+            color: #00FF00; /* Green link color */
+            font-size: 20px;
+            margin-top: 20px;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #00CC00; /* Darker green on hover */
+        }
+
         /* Media Query für kleinere Geräte */
         @media (max-width: 600px) {
             h1 {
@@ -48,5 +60,7 @@
 <body>
     <h1>hello-world</h1>
     <div class="blinking">(i-hate-music)</div>
+    <!-- Clickable link added below everything -->
+    <a href="https://www.example.com" target="_blank">Click here for more</a>
 </body>
 </html>
