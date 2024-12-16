@@ -13,9 +13,9 @@
             color: red;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
-            height: 100%;
+            height: 100vh;
             overflow: auto; /* Allow scrolling */
             text-align: center;
         }
@@ -24,7 +24,7 @@
             display: flex;
             justify-content: space-around;
             width: 50%;
-            margin-top: 20px;
+            margin-top: 30px; /* Adjusted top margin */
         }
 
         a {
@@ -51,7 +51,8 @@
             white-space: pre-wrap;
             word-wrap: break-word;
             font-size: 14px;
-            line-height: 1.2; /* Keeps the text compact */
+            line-height: 1.2;
+            overflow-x: auto; /* Prevent horizontal scroll */
         }
 
         .links-container {
@@ -63,12 +64,19 @@
             color: red;
         }
 
-        /* Keeps the content centered even when scrolling */
         .main-content {
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            flex-grow: 1; /* Allow this container to take the remaining space */
+        }
+
+        .ascii-art-container {
+            margin-top: 30px; /* Give some space before the ASCII art */
+            overflow-y: auto;
+            max-height: 60vh; /* Limit height to make sure it scrolls if necessary */
+            width: 80%; /* Make it responsive */
         }
 
     </style>
@@ -93,8 +101,10 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- ASCII Art -->
+    <!-- ASCII Art -->
+    <div class="ascii-art-container">
         <pre>
                                                               @@
                                                               @@@@@@
@@ -164,3 +174,7 @@
                                                                                                    @@@@@    @@@@@@@@@
                                                                                                    @@@@    @@@.@@@@@@
                                                                                                      @@@@@
+        </pre>
+    </div>
+</body>
+</html>
