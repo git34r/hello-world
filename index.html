@@ -8,7 +8,7 @@
         body {
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Space out the content with flex */
+            justify-content: space-between; /* This ensures that the content is spread out */
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -16,12 +16,12 @@
             text-align: center;
             background-color: black;
             color: red;
-            padding: 100px 0; /* 100px space at the top and bottom */
+            padding: 100px 0; /* Space at the top and bottom */
             box-sizing: border-box;
         }
 
         h1 {
-            font-size: 8vw; /* Use viewport width to scale dynamically */
+            font-size: 10vw; /* Responsive scaling based on viewport width */
             margin: 0;
             text-transform: lowercase;
             animation: stretch 2s infinite alternate, pulse 5s infinite;
@@ -41,8 +41,8 @@
         a {
             text-decoration: underline;
             color: red;
-            font-size: 5vw; /* Scales the links with the viewport width */
-            margin: 5vh 0; /* Margin adjusted to 5% of the viewport height */
+            font-size: 4vw; /* Scales the links according to the viewport width */
+            margin: 3vh 0; /* Vertical margin based on viewport height */
             transition: color 0.3s;
         }
 
@@ -51,10 +51,10 @@
         }
 
         .email a {
-            font-size: 7vw; /* Scales the email size with the viewport width */
+            font-size: 6vw; /* Scales the email size according to the viewport width */
             color: red;
             text-transform: lowercase;
-            margin-top: 10px;
+            margin-top: 3vh;
             text-decoration: none;
             transition: text-decoration 0.3s;
         }
@@ -64,9 +64,9 @@
         }
 
         .bookings {
-            font-size: 3vw; /* Scales bookings text with the viewport width */
+            font-size: 3vw; /* Scales bookings text based on the viewport width */
             color: red;
-            margin-top: 10vh; /* Adjusted margin with 10% of the viewport height */
+            margin-top: 5vh; /* Adjusted margin with viewport height */
             text-transform: uppercase;
         }
     </style>
