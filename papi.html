@@ -40,6 +40,27 @@
             margin-top: 5px;
         }
 
+        .email-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .email-container .tiny-text {
+            font-size: 12px;
+            color: red;
+        }
+
+        .email-container a {
+            font-size: 18px;
+            color: red;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+
+        .email-container a:hover {
+            color: darkred;
+        }
+
     </style>
 </head>
 <body>
@@ -60,6 +81,12 @@
                 <span>(hypeddit)</span> <!-- Changed <a> to <span> for non-clickable text -->
             </div>
         </div>
+    </div>
+
+    <!-- Email section -->
+    <div class="email-container">
+        <div class="tiny-text">Bookings & inquiries</div>
+        <a href="mailto:mgmt@bonpit.com">mgmt@bonpit.com</a>
     </div>
 
 </body>
