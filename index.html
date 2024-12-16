@@ -8,7 +8,7 @@
         body {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between; /* Space out the content with flex */
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -16,13 +16,15 @@
             text-align: center;
             background-color: black;
             color: red;
+            padding: 100px 0; /* 100px space at the top and bottom */
+            box-sizing: border-box;
         }
 
         h1 {
-            font-size: 69px; 
+            font-size: 8vw; /* Use viewport width to scale dynamically */
             margin: 0;
             text-transform: lowercase;
-            animation: stretch 2s infinite alternate, pulse 5s infinite; /* Added pulse animation */
+            animation: stretch 2s infinite alternate, pulse 5s infinite;
         }
 
         @keyframes stretch {
@@ -39,8 +41,8 @@
         a {
             text-decoration: underline;
             color: red;
-            font-size: 20px;
-            margin: 50px 0; /* Increased margin between links */
+            font-size: 5vw; /* Scales the links with the viewport width */
+            margin: 5vh 0; /* Margin adjusted to 5% of the viewport height */
             transition: color 0.3s;
         }
 
@@ -49,11 +51,11 @@
         }
 
         .email a {
-            font-size: 30px; /* Decreased email size by 5px */
+            font-size: 7vw; /* Scales the email size with the viewport width */
             color: red;
             text-transform: lowercase;
             margin-top: 10px;
-            text-decoration: none; /* Remove underline by default */
+            text-decoration: none;
             transition: text-decoration 0.3s;
         }
 
@@ -61,11 +63,10 @@
             text-decoration: underline; /* Underline on hover */
         }
 
-        /* Bookings & Inquiries Text */
         .bookings {
-            font-size: 15px;
+            font-size: 3vw; /* Scales bookings text with the viewport width */
             color: red;
-            margin-top: 35px; /* Reduced margin between bookings and email */
+            margin-top: 10vh; /* Adjusted margin with 10% of the viewport height */
             text-transform: uppercase;
         }
     </style>
