@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shit I broke the Internet</title>
     <style>
         body {
@@ -27,11 +27,11 @@
 
         @keyframes stretch {
             0% { transform: scaleY(1); }
-            100% { transform: scaleY(1.2); } /* Stretch headline by 20px */
+            100% { transform: scaleY(1.2); }
         }
 
         a {
-            text-decoration: none;
+            text-decoration: underline;
             color: red;
             font-size: 24px;
             margin: 10px;
@@ -42,62 +42,11 @@
             color: darkred;
         }
 
-        /* Bandcamp Link with underline and slow blinking on hover */
-        a.bandcamp {
-            text-decoration: underline;
-            animation: blink 2s ease-in-out infinite;
-        }
-
-        /* Slow blinking effect on hover for all links */
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        a:hover {
-            animation: blink 1.5s ease-in-out infinite;
-        }
-
         .email {
             font-size: 30px;
             color: red;
             text-transform: lowercase;
             margin-top: 30px;
-        }
-
-        .email a {
-            color: red;
-            text-decoration: none;
-        }
-
-        .email a:hover {
-            color: darkred;
-            animation: blink 1.5s ease-in-out infinite;
-        }
-
-        /* Red half-circle at the bottom with reduced opacity (65%) */
-        .half-circle {
-            width: 100%;
-            height: 150px;
-            background-color: red;
-            border-radius: 50% 50% 0 0;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            filter: blur(8px); /* Add blur effect */
-            opacity: 0.65; /* Reduced opacity to 65% */
-            z-index: -1; /* Keep it behind the content */
-        }
-
-        /* Media Query für kleinere Geräte */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 40px;  /* smaller font size on mobile */
-            }
-            .blinking {
-                font-size: 12px;
-            }
         }
     </style>
 </head>
@@ -105,28 +54,14 @@
     <!-- Headline -->
     <h1>hello-world</h1>
 
-    <!-- Bandcamp link (underlined and slow blinking on hover) -->
+    <!-- Clickable links -->
     <div>
-        <a href="https://bonpit.bandcamp.com" target="_blank" class="bandcamp">bandcamp</a>
-    </div>
-
-    <!-- Spotify link with blinking on hover -->
-    <div>
+        <a href="https://bonpit.bandcamp.com" target="_blank">bandcamp</a>
         <a href="https://open.spotify.com/intl-de/artist/29b71g7EtIfJnjSA0nGDzU?si=rXie0MY_Tx2Tl46PF_hBHQ" target="_blank">spotify</a>
+        <a href="https://www.instagram.com/bonpit/" target="_blank">instagram</a>
     </div>
 
-    <!-- Other clickable links with blinking effect on hover -->
-    <div>
-        <a href="https://www.example3.com" target="_blank">3</a>
-        <a href="https://www.example4.com" target="_blank">4</a>
-    </div>
-
-    <!-- Contact email with blinking effect on hover -->
-    <div class="email">
-        <a href="mailto:mgmt@bonpit.com">mgmt@bonpit.com</a>
-    </div>
-
-    <!-- Red half-circle (backlight) -->
-    <div class="half-circle"></div>
+    <!-- Contact email -->
+    <div class="email">mgmt@bonpit.com</div>
 </body>
 </html>
