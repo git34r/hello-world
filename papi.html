@@ -6,22 +6,25 @@
     <title>Split Links</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
             background-color: black;
             color: red;
-            text-align: center;
+            display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            overflow: auto; /* Allow scrolling */
+            text-align: center;
         }
 
         .container {
             display: flex;
             justify-content: space-around;
             width: 50%;
+            margin-top: 20px;
         }
 
         a {
@@ -44,35 +47,55 @@
         pre {
             font-family: monospace;
             color: red;
-            margin-top: 20px;
+            margin-top: 50px;
             white-space: pre-wrap;
             word-wrap: break-word;
+            font-size: 14px;
+            line-height: 1.2; /* Keeps the text compact */
+        }
+
+        .links-container {
+            margin-top: 50px;
+        }
+
+        .text a {
+            font-size: 14px;
+            color: red;
+        }
+
+        /* Keeps the content centered even when scrolling */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Left Link -->
-        <div>
-            <a href="https://bonpit.bandcamp.com/track/papi" target="_blank">Buy on Bandcamp</a>
-            <div class="text">
-                <a href="https://bonpit.bandcamp.com/track/papi" target="_blank">(support)</a>
+    <div class="main-content">
+        <div class="container">
+            <!-- Left Link -->
+            <div>
+                <a href="https://bonpit.bandcamp.com/track/papi" target="_blank">Buy on Bandcamp</a>
+                <div class="text">
+                    <a href="https://bonpit.bandcamp.com/track/papi" target="_blank">(support)</a>
+                </div>
+            </div>
+
+            <!-- Right Link -->
+            <div>
+                <a href="https://hypeddit.com/bonpit/papii" target="_blank">Free Download</a>
+                <div class="text">
+                    <a href="https://hypeddit.com/bonpit/papii" target="_blank">(hypeddit)</a>
+                </div>
             </div>
         </div>
 
-        <!-- Right Link -->
-        <div>
-            <a href="https://hypeddit.com/bonpit/papii" target="_blank">Free Download</a>
-            <div class="text">
-                <a href="https://hypeddit.com/bonpit/papii" target="_blank">(hypeddit)</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ASCII Art -->
-    <pre>
+        <!-- ASCII Art -->
+        <pre>
                                                               @@
                                                               @@@@@@
                                                               @@@@@@
@@ -140,9 +163,4 @@
                                                                                                   @@@%@@@@    %% @@@@@
                                                                                                    @@@@@    @@@@@@@@@
                                                                                                    @@@@    @@@.@@@@@@
-                                                                                                     @@@@@@@    .@@:
-                                                                                                      ...
-    </pre>
-
-</body>
-</html>
+                                                                                                     @@@@@
