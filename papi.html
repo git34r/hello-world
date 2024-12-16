@@ -3,38 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shit I broke the Internet</title>
+    <title>Split Links</title>
     <style>
         body {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            text-align: center;
             background-color: black;
             color: red;
+            text-align: center;
         }
 
-        h1 {
-            font-size: 37.5px; /* Decreased size by 10% from 50px */
-            margin: 0;
-            text-transform: lowercase;
-            animation: stretch 2s infinite alternate;
-        }
-
-        @keyframes stretch {
-            0% { transform: scaleY(1); }
-            100% { transform: scaleY(1.2); }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            width: 50%;
         }
 
         a {
             text-decoration: underline;
             color: red;
             font-size: 24px;
-            margin: 50px 0; /* Increased margin between links */
             transition: color 0.3s;
         }
 
@@ -42,38 +34,33 @@
             color: darkred;
         }
 
-        .email {
-            font-size: 50px; /* Set to 50px to increase the email size */
+        .text {
+            font-size: 18px;
             color: red;
-            text-transform: lowercase;
-            margin-top: 10px; /* Adjusted margin to avoid too much space */
+            margin-top: 5px;
         }
 
-        /* Bookings & Inquiries Text */
-        .bookings {
-            font-size: 15px;
-            color: red;
-            margin-top: 10px; /* Reduced margin between bookings and email */
-            text-transform: uppercase;
-        }
     </style>
 </head>
 <body>
-    <!-- Headline -->
-    <h1>hello-world</h1>
 
-    <!-- Clickable links -->
-    <div>
-        <a href="https://bonpit.bandcamp.com" target="_blank">bandcamp</a>
-        <a href="https://soundcloud.com/bbonpit" target="_blank">soundcloud</a>
-        <a href="https://open.spotify.com/intl-de/artist/29b71g7EtIfJnjSA0nGDzU?si=rXie0MY_Tx2Tl46PF_hBHQ" target="_blank">spotify</a>
-        <a href="https://www.instagram.com/bonpit_/" target="_blank">instagram</a>
+    <div class="container">
+        <!-- Left Link -->
+        <div>
+            <a href="https://bonpit.bandcamp.com/track/papi" target="_blank">Buy on Bandcamp</a>
+            <div class="text">
+                <span>(support)</span> <!-- Changed <a> to <span> for non-clickable text -->
+            </div>
+        </div>
+
+        <!-- Right Link -->
+        <div>
+            <a href="https://hypeddit.com/bonpit/papii" target="_blank">Free Download</a>
+            <div class="text">
+                <span>(hypeddit)</span> <!-- Changed <a> to <span> for non-clickable text -->
+            </div>
+        </div>
     </div>
 
-    <!-- Bookings & Inquiries Text -->
-    <div class="bookings">Bookings & inquiries</div>
-
-    <!-- Contact email (mailto link) -->
-    <div class="email"><a href="mailto:mgmt@bonpit.com">mgmt@bonpit.com</a></div>
 </body>
 </html>
