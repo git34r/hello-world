@@ -13,11 +13,13 @@
             color: red;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: auto; /* Allow scrolling */
+            overflow: hidden; /* Hide the scrollbars */
             text-align: center;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy533MmYgODTg') no-repeat center center fixed;
+            background-size: contain;
         }
 
         .container {
@@ -25,6 +27,7 @@
             justify-content: space-around;
             width: 50%;
             margin-top: 30px; /* Adjusted top margin */
+            z-index: 2; /* To make sure links stay on top of background */
         }
 
         a {
@@ -44,15 +47,24 @@
             margin-top: 5px;
         }
 
-        pre {
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1; /* Allow this container to take the remaining space */
+            z-index: 2; /* Keep the main content above the background */
+        }
+
+        .ascii-art-container {
+            color: darkgrey;
             font-family: monospace;
-            color: red;
-            margin-top: 50px;
+            font-size: 10px;
+            line-height: 1.5;
+            text-shadow: 0 0 5px black; /* Adding a shadow to enhance visibility */
+            z-index: 1; /* Ensure background stays behind the content */
             white-space: pre-wrap;
             word-wrap: break-word;
-            font-size: 14px;
-            line-height: 1.2;
-            overflow-x: auto; /* Prevent horizontal scroll */
         }
 
         .links-container {
@@ -63,22 +75,6 @@
             font-size: 14px;
             color: red;
         }
-
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1; /* Allow this container to take the remaining space */
-        }
-
-        .ascii-art-container {
-            margin-top: 30px; /* Give some space before the ASCII art */
-            overflow-y: auto;
-            max-height: 60vh; /* Limit height to make sure it scrolls if necessary */
-            width: 80%; /* Make it responsive */
-        }
-
     </style>
 </head>
 <body>
@@ -103,7 +99,7 @@
         </div>
     </div>
 
-    <!-- ASCII Art -->
+    <!-- Hidden ASCII art in background -->
     <div class="ascii-art-container">
         <pre>
                                                               @@
@@ -173,8 +169,10 @@
                                                                                                   @@@%@@@@    %% @@@@@
                                                                                                    @@@@@    @@@@@@@@@
                                                                                                    @@@@    @@@.@@@@@@
-                                                                                                     @@@@@
+                                                                                                     @@@@@@@    .@@:
+                                                                                                      ...
         </pre>
     </div>
+
 </body>
 </html>
