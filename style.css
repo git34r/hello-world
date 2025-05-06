@@ -1,0 +1,63 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: black;
+    color: red;
+}
+
+h1 {
+    font-size: 65px; /* Increased size by 5px */
+    margin: 0;
+    text-transform: lowercase;
+    animation: stretch 2s infinite alternate, pulse 5s infinite; /* Added pulse animation */
+}
+
+@keyframes stretch {
+    0% { transform: scaleY(1); }
+    100% { transform: scaleY(1.2); }
+}
+
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+a {
+    text-decoration: underline;
+    color: red;
+    font-size: 20px;
+    margin: 50px 0; /* Increased margin between links */
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: darkred;
+}
+
+.email a {
+    font-size: 30px; /* Decreased email size by 5px */
+    color: red;
+    text-transform: lowercase;
+    margin-top: 10px;
+    text-decoration: none; /* Remove underline by default */
+    transition: text-decoration 0.3s;
+}
+
+.email a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+/* Bookings & Inquiries Text */
+.bookings {
+    font-size: 15px;
+    color: red;
+    margin-top: 35px; /* Reduced margin between bookings and email */
+    text-transform: uppercase;
+}
