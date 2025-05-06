@@ -11,6 +11,27 @@ body {
     color: red;
 }
 
+.red-ball {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 8px;
+    background-color: red;
+    border-radius: 50%;
+    animation: breathing 2s infinite;
+}
+
+@keyframes breathing {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 h1 {
     font-size: 65px; /* Increased size by 5px */
     margin: 0;
