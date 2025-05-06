@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download pls me(bonus)</title>
+    <title>Download ey_man</title>
     <style>
         body {
             display: flex;
@@ -71,7 +71,7 @@
     <div class="container">
         <!-- Left Link -->
         <div>
-            <a href="https://bonpit.bandcamp.com/track/pls-me-bonus" target="_blank">Buy on Bandcamp</a>
+            <a href="https://bonpit.bandcamp.com/track/ey-man" target="_blank">Buy on Bandcamp</a>
             <div class="text">
                 <span>(support)</span> <!-- Changed <a> to <span> for non-clickable text -->
             </div>
@@ -79,7 +79,7 @@
 
         <!-- Right Link -->
         <div>
-            <a href="https://hypeddit.com/bonpit/plsmebonus" target="_blank">Free Download</a>
+            <a href="https://hypeddit.com/bonpit/eyman" target="_blank">Free Download</a>
             <div class="text">
                 <span>(hypeddit)</span> <!-- Changed <a> to <span> for non-clickable text -->
             </div>

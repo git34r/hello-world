@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download cold</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: red;
+            text-align: center;
+            position: relative;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            width: 50%;
+        }
+
+        a {
+            text-decoration: underline;
+            color: red;
+            font-size: 24px;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: darkred;
+        }
+
+        .text {
+            font-size: 18px;
+            color: red;
+            margin-top: 5px;
+        }
+
+        .email-container {
+            position: absolute;
+            bottom: 20px; /* Distance from the bottom */
+            width: 100%;
+            text-align: center;
+        }
+
+        .email-container .tiny-text {
+            font-size: 12px;
+            color: red;
+        }
+
+        .email-container a {
+            font-size: 18px;
+            color: red;
+            text-decoration: underline;
+            transition: color 0.3s;
+        }
+
+        .email-container a:hover {
+            color: darkred;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Left Link -->
+        <div>
+            <a href="https://bonpit.bandcamp.com/track/cold" target="_blank">Buy on Bandcamp</a>
+            <div class="text">
+                <span>(support)</span> <!-- Changed <a> to <span> for non-clickable text -->
+            </div>
+        </div>
+
+        <!-- Right Link -->
+        <div>
+            <a href="https://hypeddit.com/bonpit/coldd" target="_blank">Free Download</a>
+            <div class="text">
+                <span>(hypeddit)</span> <!-- Changed <a> to <span> for non-clickable text -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Email section -->
+    <div class="email-container">
+        <div class="tiny-text">Bookings & Inquiries</div>
+        <a href="mailto:mgmt@bonpit.com">mgmt@bonpit.com</a>
+    </div>
+
+</body>
+</html>
