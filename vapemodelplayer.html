@@ -24,12 +24,118 @@
             text-transform: lowercase;
             color: red;
         }
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            justify-content: center;
+        }
         .video-container {
             position: relative;
         }
         .video-container iframe {
             display: block;
             border: none;
+        }
+        .chat-container {
+            width: 350px;
+            height: 315px;
+            border: 2px solid red;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-header {
+            padding: 10px;
+            border-bottom: 2px solid red;
+            background-color: rgba(255, 0, 0, 0.1);
+            font-weight: bold;
+            color: red;
+            text-align: left;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chat-message {
+            text-align: left;
+            padding: 8px;
+            background-color: rgba(255, 0, 0, 0.05);
+            border-left: 2px solid red;
+            color: red;
+            font-size: 14px;
+            line-height: 1.4;
+            animation: slideIn 0.3s ease-out;
+        }
+        .chat-message.deleted {
+            color: #888;
+            font-style: italic;
+        }
+        .chat-message.own-message {
+            background-color: rgba(128, 0, 128, 0.2);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .chat-message .username {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .subscriber-icon {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: red;
+            border-radius: 50%;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+        .chat-input-container {
+            border-top: 2px solid red;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            gap: 8px;
+        }
+        .chat-input {
+            flex: 1;
+            background-color: rgba(255, 0, 0, 0.1);
+            border: 1px solid red;
+            color: red;
+            padding: 8px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+        .chat-input::placeholder {
+            color: #666;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: #ff6666;
+        }
+        .chat-send-btn {
+            background-color: red;
+            color: black;
+            border: 1px solid red;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .chat-send-btn:hover {
+            background-color: #ff6666;
         }
         .fallback-link {
             margin-top: 20px;
@@ -45,22 +151,164 @@
 <body>
     <h1>vapemodelplayer</h1>
     
-    <div class="video-container">
-        <iframe 
-            width="560" 
-            height="315" 
-            src="https://www.youtube.com/embed/rXvCHTzxc18" 
-            title="YouTube video player" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            referrerpolicy="origin"
-            allowfullscreen>
-        </iframe>
+    <div class="content-wrapper">
+        <div class="video-container">
+            <iframe 
+                width="560" 
+                height="315" 
+                src="https://www.youtube.com/embed/rXvCHTzxc18" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="origin"
+                allowfullscreen>
+            </iframe>
+        </div>
+        
+        <div class="chat-container">
+            <div class="chat-header">VapeChat (live)</div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
+                <button class="chat-send-btn" id="chatSendBtn">Send</button>
+            </div>
+        </div>
     </div>
     
     <div class="fallback-link">
         <a href="https://www.youtube.com/watch?v=rXvCHTzxc18" target="_blank">Watch on YouTube</a>
     </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        
+        const comments = [
+            "omg this is so epic! 🔥",
+            "best video ever! 😱",
+            "this changed my life! 💯",
+            "absolutely insane! 🤯",
+            "ive watched this 100 times",
+            "this is the best thing ever! 🔥",
+            "my mind is blown! 🤯",
+            "im showing this to everyone!",
+            "this deserves all the awards! 🏆",
+            "perfection! 😍",
+            "bro this is literally the best!",
+            "i cant stop watching this! 🔥",
+            "this is insane! 🤯",
+            "why is this so perfect?! 😭",
+            "i wish i could watch this forever!",
+            "so good!",
+            "amazing!",
+            "fire! 🔥",
+            "love this!",
+            "incredible!"
+        ];
+        
+        const usernames = [
+            { name: "vapelikecrazy6", color: "#ffff00", subscriber: true },
+            { name: "xXUpInSmokeXx", color: "#00ff00", subscriber: false },
+            { name: "bigtits7", color: "#00ffff", subscriber: true },
+            { name: "whatthehelly00", color: "#ff00ff", subscriber: false },
+            { name: "vapemaster420", color: "#ffff00", subscriber: true },
+            { name: "smokeyclouds99", color: "#00ff00", subscriber: false },
+            { name: "vapeking123", color: "#0080ff", subscriber: true },
+            { name: "cloudchaser88", color: "#ff8000", subscriber: false }
+        ];
+        
+        let messageCount = 0;
+        let deletedMessageAdded = false;
+        let lastUsername = null;
+        const totalMessages = 10;
+        const totalTime = 100000; // 100 seconds (5x slower than 20 seconds)
+        
+        function getRandomUser(excludeUsername = null) {
+            let availableUsers = usernames;
+            if (excludeUsername) {
+                availableUsers = usernames.filter(u => u.name !== excludeUsername);
+            }
+            if (availableUsers.length === 0) {
+                availableUsers = usernames;
+            }
+            return availableUsers[Math.floor(Math.random() * availableUsers.length)];
+        }
+        
+        function addChatMessage(isDeleted = false, customMessage = null, customUsername = null) {
+            if (isDeleted && !deletedMessageAdded) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'chat-message deleted';
+                messageDiv.innerHTML = `<span class="username" style="color: #888;">DiscordAdmin:</span>this message was deleted`;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                deletedMessageAdded = true;
+                return;
+            }
+            
+            if (messageCount >= totalMessages && !isDeleted) return;
+            
+            let randomComment, randomUser;
+            
+            if (customMessage && customUsername) {
+                randomComment = customMessage;
+                randomUser = { name: customUsername, color: "#8B0000", subscriber: false };
+            } else {
+                randomComment = comments[Math.floor(Math.random() * comments.length)];
+                randomUser = getRandomUser(lastUsername);
+                lastUsername = randomUser.name;
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = customUsername === "You" ? 'chat-message own-message' : 'chat-message';
+            
+            messageDiv.innerHTML = `<span class="username" style="color: ${randomUser.color};">${randomUser.name}:</span>${randomComment}`;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            if (!isDeleted) {
+                messageCount++;
+            }
+            
+            if (messageCount < totalMessages && !isDeleted) {
+                // Random interval between messages (distributed over remaining time)
+                const remainingTime = totalTime - (Date.now() - startTime);
+                const remainingMessages = totalMessages - messageCount;
+                const averageInterval = remainingTime / remainingMessages;
+                // Random between 0.5x and 1.5x of average interval
+                const randomInterval = averageInterval * (0.5 + Math.random());
+                setTimeout(() => {
+                    // Randomly add deleted message
+                    if (!deletedMessageAdded && Math.random() < 0.3) {
+                        addChatMessage(true);
+                        setTimeout(addChatMessage, 2000);
+                    } else {
+                        addChatMessage();
+                    }
+                }, Math.max(100, randomInterval));
+            }
+        }
+        
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+                addChatMessage(false, "I just peed myself!", "You");
+                chatInput.value = '';
+            }
+        }
+        
+        chatSendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        const startTime = Date.now();
+        // Start first message after a random delay
+        setTimeout(addChatMessage, Math.random() * 2000);
+    </script>
 </body>
 </html>
 
