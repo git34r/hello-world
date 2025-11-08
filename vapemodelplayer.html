@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vapemodel Player - Shit I broke the Internet</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: black;
+            color: red;
+        }
+        h1 {
+            font-size: 30px;
+            margin-bottom: 40px;
+            text-transform: lowercase;
+            color: red;
+        }
+        .video-container {
+            position: relative;
+        }
+        .video-container iframe {
+            display: block;
+            border: none;
+        }
+        .fallback-link {
+            margin-top: 20px;
+            color: red;
+            text-decoration: underline;
+            font-size: 18px;
+        }
+        .fallback-link:hover {
+            color: darkred;
+        }
+    </style>
+</head>
+<body>
+    <h1>vapemodelplayer</h1>
+    
+    <div class="video-container">
+        <iframe 
+            width="560" 
+            height="315" 
+            src="https://www.youtube.com/embed/rXvCHTzxc18" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerpolicy="origin"
+            allowfullscreen>
+        </iframe>
+    </div>
+    
+    <div class="fallback-link">
+        <a href="https://www.youtube.com/watch?v=rXvCHTzxc18" target="_blank">Watch on YouTube</a>
+    </div>
+</body>
+</html>
+
