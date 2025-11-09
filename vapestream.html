@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vapemodel Player - Shit I broke the Internet</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 80px;
+            padding-bottom: 100px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: black;
+            color: red;
+        }
+        h1 {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 36px;
+            margin: 0;
+            padding: 0;
+            text-transform: lowercase;
+            color: red;
+            z-index: 1001;
+            pointer-events: none;
+        }
+        .part-title {
+            font-size: 24px;
+            color: red;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .video-section {
+            min-width: 100%;
+            margin-bottom: 60px;
+            flex-shrink: 0;
+        }
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 0, 0, 0.7);
+            color: black;
+            border: 2px solid red;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background-color 0.3s;
+        }
+        .slider-nav:hover {
+            background-color: red;
+        }
+        .slider-nav.prev {
+            left: 20px;
+        }
+        .slider-nav.next {
+            right: 20px;
+        }
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: red;
+            text-decoration: underline;
+            font-size: 18px;
+            z-index: 1001;
+        }
+        .back-button:hover {
+            color: darkred;
+        }
+        .content-wrapper {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        .video-container {
+            position: relative;
+        }
+        .video-container iframe {
+            display: block;
+            border: none;
+        }
+        .chat-container {
+            width: 350px;
+            height: 315px;
+            border: 2px solid red;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-header {
+            padding: 10px;
+            border-bottom: 2px solid red;
+            background-color: rgba(255, 0, 0, 0.1);
+            font-weight: bold;
+            color: red;
+            text-align: left;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chat-message {
+            text-align: left;
+            padding: 8px;
+            background-color: rgba(255, 0, 0, 0.05);
+            border-left: 2px solid red;
+            color: red;
+            font-size: 14px;
+            line-height: 1.4;
+            animation: slideIn 0.3s ease-out;
+        }
+        .chat-message.deleted {
+            color: #888;
+            font-style: italic;
+        }
+        .chat-message.own-message {
+            background-color: rgba(128, 0, 128, 0.2);
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .chat-message .username {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .subscriber-icon {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: red;
+            border-radius: 50%;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+        .chat-input-container {
+            border-top: 2px solid red;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            gap: 8px;
+        }
+        .chat-input {
+            flex: 1;
+            background-color: rgba(255, 0, 0, 0.1);
+            border: 1px solid red;
+            color: red;
+            padding: 8px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+        .chat-input::placeholder {
+            color: #666;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: #ff6666;
+        }
+        .chat-send-btn {
+            background-color: red;
+            color: black;
+            border: 1px solid red;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .chat-send-btn:hover {
+            background-color: #ff6666;
+        }
+        .bottom-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+        }
+        .bottom-center {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            z-index: 1001;
+        }
+        .bottom-right {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            z-index: 1001;
+        }
+        .watch-youtube-link {
+            color: red;
+            text-decoration: underline;
+            font-size: 18px;
+        }
+        .watch-youtube-link:hover {
+            color: darkred;
+        }
+        .bottom-left .bookings {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .bottom-left .email {
+            margin-top: 0;
+        }
+        .bookings {
+            font-size: 15px;
+            color: red;
+            margin-top: 35px;
+            text-transform: uppercase;
+        }
+        .email a {
+            font-size: 30px;
+            color: red;
+            text-transform: lowercase;
+            margin-top: 10px;
+            text-decoration: none;
+            transition: text-decoration 0.3s;
+        }
+        .email a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">back</a>
+    <h1>!vapestream!</h1>
+    
+    <div class="slider-container">
+        <button class="slider-nav prev" id="prevBtn">‹</button>
+        <button class="slider-nav next" id="nextBtn">›</button>
+        <div class="slider-wrapper" id="sliderWrapper">
+            <div class="video-section">
+                <div class="part-title">Part 1: Origin Story</div>
+                <div class="content-wrapper">
+                    <div class="video-container">
+                        <iframe 
+                            width="560" 
+                            height="315" 
+                            src="https://www.youtube.com/embed/rXvCHTzxc18" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="origin"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    
+                    <div class="chat-container">
+                        <div class="chat-header">VapeChat (live)</div>
+                        <div class="chat-messages" id="chatMessages"></div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="chatInput" placeholder="Type a message...">
+                            <button class="chat-send-btn" id="chatSendBtn">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-section">
+                <div class="part-title">Part 2: Old Enough</div>
+                <div class="content-wrapper">
+                    <div class="video-container">
+                        <iframe 
+                            width="560" 
+                            height="315" 
+                            src="https://www.youtube.com/embed/k_qe5QTgbxI" 
+                            title="YouTube video player" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="origin"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    
+                    <div class="chat-container">
+                        <div class="chat-header">VapeChat (live)</div>
+                        <div class="chat-messages" id="chatMessages2"></div>
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="chatInput2" placeholder="Type a message...">
+                            <button class="chat-send-btn" id="chatSendBtn2">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bottom-center">
+        <div class="bookings">Bookings & inquiries</div>
+        <div class="email"><a href="mailto:admin@bonpit.com">admin@bonpit.com</a></div>
+    </div>
+    <div class="bottom-right">
+        <a href="https://www.youtube.com/watch?v=rXvCHTzxc18" target="_blank" class="watch-youtube-link">Watch on YouTube</a>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        
+        const comments = [
+            "omg this is so epic 🔥",
+            "best video ever 😱",
+            "this changed my life 💯",
+            "absolutely insane 🤯",
+            "ive watched this 100 times",
+            "this is the best thing ever 🔥",
+            "my mind is blown 🤯",
+            "im showing this to everyone",
+            "this deserves all the awards 🏆",
+            "perfection 😍",
+            "bro this is literally the best",
+            "i cant stop watching this 🔥",
+            "this is insane 🤯",
+            "why is this so perfect 😭",
+            "i wish i could watch this forever",
+            "so good",
+            "amazing",
+            "fire 🔥",
+            "love this",
+            "incredible"
+        ];
+        
+        const usernames = [
+            { name: "vapelikecrazy6", color: "#ffff00", subscriber: true },
+            { name: "xXUpInSmokeXx", color: "#00ff00", subscriber: false },
+            { name: "bigtits7", color: "#00ffff", subscriber: true },
+            { name: "whatthehelly00", color: "#ff00ff", subscriber: false },
+            { name: "vapemaster420", color: "#ffff00", subscriber: true },
+            { name: "smokeyclouds99", color: "#00ff00", subscriber: false },
+            { name: "vapeking123", color: "#0080ff", subscriber: true },
+            { name: "cloudchaser88", color: "#ff8000", subscriber: false }
+        ];
+        
+        let messageCount = 0;
+        let deletedMessageAdded = false;
+        let lastUsername = null;
+        const totalMessages = 10;
+        const totalTime = 100000; // 100 seconds (5x slower than 20 seconds)
+        
+        function getRandomUser(excludeUsername = null) {
+            let availableUsers = usernames;
+            if (excludeUsername) {
+                availableUsers = usernames.filter(u => u.name !== excludeUsername);
+            }
+            if (availableUsers.length === 0) {
+                availableUsers = usernames;
+            }
+            return availableUsers[Math.floor(Math.random() * availableUsers.length)];
+        }
+        
+        function addChatMessage(isDeleted = false, customMessage = null, customUsername = null) {
+            if (isDeleted && !deletedMessageAdded) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'chat-message deleted';
+                messageDiv.innerHTML = `<span class="username" style="color: #888;">DiscordAdmin:</span>this message was deleted`;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                deletedMessageAdded = true;
+                return;
+            }
+            
+            if (messageCount >= totalMessages && !isDeleted) return;
+            
+            let randomComment, randomUser;
+            
+            if (customMessage && customUsername) {
+                randomComment = customMessage;
+                randomUser = { name: customUsername, color: "#8B0000", subscriber: false };
+            } else {
+                randomComment = comments[Math.floor(Math.random() * comments.length)];
+                randomUser = getRandomUser(lastUsername);
+                lastUsername = randomUser.name;
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = customUsername === "You" ? 'chat-message own-message' : 'chat-message';
+            
+            messageDiv.innerHTML = `<span class="username" style="color: ${randomUser.color};">${randomUser.name}:</span>${randomComment}`;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            if (!isDeleted) {
+                messageCount++;
+            }
+            
+            if (messageCount < totalMessages && !isDeleted) {
+                // Random interval between messages (distributed over remaining time)
+                const remainingTime = totalTime - (Date.now() - startTime);
+                const remainingMessages = totalMessages - messageCount;
+                const averageInterval = remainingTime / remainingMessages;
+                // Random between 0.5x and 1.5x of average interval
+                const randomInterval = averageInterval * (0.5 + Math.random());
+                setTimeout(() => {
+                    // Randomly add deleted message
+                    if (!deletedMessageAdded && Math.random() < 0.3) {
+                        addChatMessage(true);
+                        setTimeout(addChatMessage, 2000);
+                    } else {
+                        addChatMessage();
+                    }
+                }, Math.max(100, randomInterval));
+            }
+        }
+        
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+                addChatMessage(false, "I just peed myself!", "You");
+                chatInput.value = '';
+            }
+        }
+        
+        chatSendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        const startTime = Date.now();
+        // Start first message after a random delay
+        setTimeout(addChatMessage, Math.random() * 2000);
+        
+        // Second chat functionality
+        const chatMessages2 = document.getElementById('chatMessages2');
+        const chatInput2 = document.getElementById('chatInput2');
+        const chatSendBtn2 = document.getElementById('chatSendBtn2');
+        
+        let messageCount2 = 0;
+        let deletedMessageAdded2 = false;
+        let lastUsername2 = null;
+        const totalMessages2 = 10;
+        const totalTime2 = 100000;
+        
+        function addChatMessage2(isDeleted = false, customMessage = null, customUsername = null) {
+            if (isDeleted && !deletedMessageAdded2) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'chat-message deleted';
+                messageDiv.innerHTML = `<span class="username" style="color: #888;">DiscordAdmin:</span>this message was deleted`;
+                chatMessages2.appendChild(messageDiv);
+                chatMessages2.scrollTop = chatMessages2.scrollHeight;
+                deletedMessageAdded2 = true;
+                return;
+            }
+            
+            if (messageCount2 >= totalMessages2 && !isDeleted) return;
+            
+            let randomComment, randomUser;
+            
+            if (customMessage && customUsername) {
+                randomComment = customMessage;
+                randomUser = { name: customUsername, color: "#8B0000", subscriber: false };
+            } else {
+                randomComment = comments[Math.floor(Math.random() * comments.length)];
+                randomUser = getRandomUser(lastUsername2);
+                lastUsername2 = randomUser.name;
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = customUsername === "You" ? 'chat-message own-message' : 'chat-message';
+            
+            messageDiv.innerHTML = `<span class="username" style="color: ${randomUser.color};">${randomUser.name}:</span>${randomComment}`;
+            
+            chatMessages2.appendChild(messageDiv);
+            chatMessages2.scrollTop = chatMessages2.scrollHeight;
+            
+            if (!isDeleted) {
+                messageCount2++;
+            }
+            
+            if (messageCount2 < totalMessages2 && !isDeleted) {
+                const remainingTime = totalTime2 - (Date.now() - startTime2);
+                const remainingMessages = totalMessages2 - messageCount2;
+                const averageInterval = remainingTime / remainingMessages;
+                const randomInterval = averageInterval * (0.5 + Math.random());
+                setTimeout(() => {
+                    if (!deletedMessageAdded2 && Math.random() < 0.3) {
+                        addChatMessage2(true);
+                        setTimeout(addChatMessage2, 2000);
+                    } else {
+                        addChatMessage2();
+                    }
+                }, Math.max(100, randomInterval));
+            }
+        }
+        
+        function sendMessage2() {
+            const message = chatInput2.value.trim();
+            if (message) {
+                addChatMessage2(false, "I just peed myself!", "You");
+                chatInput2.value = '';
+            }
+        }
+        
+        chatSendBtn2.addEventListener('click', sendMessage2);
+        chatInput2.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage2();
+            }
+        });
+        
+        const startTime2 = Date.now();
+        setTimeout(addChatMessage2, Math.random() * 2000);
+        
+        // Slider functionality
+        const sliderWrapper = document.getElementById('sliderWrapper');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentSlide = 0;
+        const totalSlides = 2;
+        
+        function updateSlider() {
+            sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+        
+        nextBtn.addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlider();
+        });
+        
+        prevBtn.addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSlider();
+        });
+    </script>
+</body>
+</html>
+
