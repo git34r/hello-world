@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Shit I broke the Internet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .gallery-title {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 18px;
+            color: white;
+            background-color: black;
+            padding: 10px 15px;
+            z-index: 100;
+            cursor: pointer;
+        }
+        body.comic-sans * {
+            font-family: 'Comic Sans MS', cursive !important;
+        }
+        .covers-subtitle {
+            font-size: 12px;
+            color: #333;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: normal;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+            position: absolute;
+            left: -80px;
+            top: 60px;
+            white-space: nowrap;
+            z-index: 1;
+        }
+        .gallery-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .gallery-item {
+            cursor: pointer;
+            overflow: visible;
+            position: relative;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .gallery-item .image-title {
+            margin-top: 3px;
+            font-size: 14px;
+            color: #333;
+            text-align: left;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+        .gallery-item .placeholder {
+            display: none;
+            width: 20px;
+            height: 20px;
+            background-color: #000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .gallery-item.enlarged img {
+            display: none;
+        }
+        .gallery-item.enlarged .placeholder {
+            display: block;
+        }
+        .gallery-item.enlarged-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+            pointer-events: auto;
+        }
+        .gallery-item.enlarged-view img {
+            max-width: 90vw;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+        .home-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: red;
+            text-decoration: underline;
+            font-size: 14px;
+            z-index: 100;
+        }
+        .email-link {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: red;
+            text-decoration: underline;
+            font-size: 12px;
+            z-index: 100;
+        }
+        .work-to-do {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform-origin: top center;
+            color: blue;
+            text-decoration: underline;
+            font-size: 18px;
+            z-index: 50;
+            pointer-events: none;
+            animation: swing 2s ease-in-out infinite;
+        }
+        @keyframes swing {
+            0%, 100% {
+                transform: translate(-50%, -50%) rotate(-15deg);
+            }
+            50% {
+                transform: translate(-50%, -50%) rotate(15deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-title" id="commissions-toggle">commissions</div>
+    <div class="work-to-do">here is still work to do</div>
+    <a href="index.html" class="home-button">home</a>
+    <a href="mailto:admin@bonpit.com" class="email-link">admin@bonpit.com</a>
+    <div class="gallery-container" style="max-width: 1200px; margin: 0 auto; padding-top: 60px; padding-left: 100px;">
+        <div class="covers-subtitle">Covers</div>
+        <div class="gallery" id="gallery">
+            <!-- Images will be generated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Images from GitHub repository: https://github.com/git34r/hello-world/tree/main/port
+        const githubRepo = 'https://raw.githubusercontent.com/git34r/hello-world/main/port';
+        const githubApi = 'https://api.github.com/repos/git34r/hello-world/contents/port';
+        
+        const gallery = document.getElementById('gallery');
+        
+        // Function to fetch image list from GitHub API
+        async function fetchImageList() {
+            try {
+                const response = await fetch(githubApi);
+                const files = await response.json();
+                return files
+                    .filter(file => file.type === 'file' && /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name))
+                    .map(file => file.name);
+            } catch (error) {
+                console.error('Error fetching images from GitHub:', error);
+                return [];
+            }
+        }
+        
+        // Function to check if image exists
+        async function loadImage(imageName) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(`${githubRepo}/${imageName}`);
+                img.onerror = () => resolve(null);
+                img.src = `${githubRepo}/${imageName}`;
+            });
+        }
+        
+        // Function to create gallery item
+        function createGalleryItem(imagePath, fileName, index) {
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            
+            const img = document.createElement('img');
+            img.src = imagePath;
+            img.alt = fileName || 'Portfolio image';
+            
+            const placeholder = document.createElement('div');
+            placeholder.className = 'placeholder';
+            
+            const imageTitle = document.createElement('div');
+            imageTitle.className = 'image-title';
+            imageTitle.textContent = (index + 1).toString();
+            
+            item.appendChild(img);
+            item.appendChild(placeholder);
+            item.appendChild(imageTitle);
+            
+            // Create enlarged view element (separate from the grid item)
+            const enlargedView = document.createElement('div');
+            enlargedView.className = 'gallery-item enlarged-view';
+            enlargedView.style.display = 'none'; // Hidden by default
+            const enlargedImg = document.createElement('img');
+            enlargedImg.src = imagePath;
+            enlargedImg.alt = fileName || 'Portfolio image';
+            enlargedView.appendChild(enlargedImg);
+            document.body.appendChild(enlargedView);
+            
+            // Click handler to enlarge/shrink
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                if (enlargedView.style.display === 'flex') {
+                    enlargedView.style.display = 'none';
+                    item.classList.remove('enlarged');
+                } else {
+                    // Hide all other enlarged views
+                    document.querySelectorAll('.enlarged-view').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    document.querySelectorAll('.gallery-item').forEach(el => {
+                        el.classList.remove('enlarged');
+                    });
+                    
+                    enlargedView.style.display = 'flex';
+                    item.classList.add('enlarged');
+                }
+            });
+            
+            // Click on enlarged view to close
+            enlargedView.addEventListener('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                enlargedView.style.display = 'none';
+                item.classList.remove('enlarged');
+            });
+            
+            return item;
+        }
+        
+        // Load and display images
+        async function initializeGallery() {
+            const imageFileNames = await fetchImageList();
+            
+            if (imageFileNames.length === 0) {
+                gallery.innerHTML = '<p>No images found</p>';
+                return;
+            }
+            
+            // Load and display all images
+            for (let i = 0; i < imageFileNames.length; i++) {
+                const fileName = imageFileNames[i];
+                const imageUrl = await loadImage(fileName);
+                if (imageUrl) {
+                    const galleryItem = createGalleryItem(imageUrl, fileName, i);
+                    gallery.appendChild(galleryItem);
+                }
+            }
+        }
+        
+        // Initialize gallery when page loads
+        initializeGallery();
+        
+        // Toggle Comic Sans on all fonts when clicking "commissions"
+        const commissionsToggle = document.getElementById('commissions-toggle');
+        if (commissionsToggle) {
+            commissionsToggle.addEventListener('click', function() {
+                document.body.classList.toggle('comic-sans');
+            });
+        }
+    </script>
+</body>
+</html>
