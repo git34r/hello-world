@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shit I broke the Internet</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .vapemodel-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            color: black;
+            font-weight: bold;
+            text-align: left;
+            margin: 0;
+            padding: 5px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            z-index: 999;
+            background-color: red;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        .vapemodel-header span {
+            color: black;
+            display: inline-block;
+        }
+        .vapemodel-header-content {
+            display: inline-block;
+            animation: scroll-right 20s linear infinite;
+        }
+        @keyframes scroll-right {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        /* Dropdown Menu */
+        .dropdown {
+            position: fixed;
+            top: 35px;
+            left: 20px;
+            z-index: 1000;
+        }
+        .menu-button {
+            background-color: transparent;
+            color: red;
+            border: 1px solid red;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        .menu-button:hover {
+            background-color: red;
+            color: black;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1;
+            flex-direction: row;
+            gap: 5px;
+            padding-top: 5px;
+        }
+        .dropdown:hover .dropdown-content {
+            display: flex;
+        }
+        .dropdown-content::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 0;
+            right: 0;
+            height: 5px;
+        }
+        .dropdown-content a {
+            color: red;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: block;
+            background-color: black;
+            border: 1px solid red;
+            text-transform: uppercase;
+            white-space: nowrap;
+            transition: all 0.3s;
+            pointer-events: auto;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        .dropdown-content a:hover {
+            background-color: red;
+            color: black;
+            animation: shiver 0.3s infinite;
+        }
+        @keyframes shiver {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-2px, -1px) rotate(-1deg); }
+            50% { transform: translate(2px, 1px) rotate(1deg); }
+            75% { transform: translate(-1px, 2px) rotate(-0.5deg); }
+        }
+        /* Dimmed background overlay on text hover */
+        .dim-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0);
+            pointer-events: none;
+            transition: background-color 0.3s;
+            z-index: -1;
+        }
+        body.dimmed .dim-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        body {
+            padding-top: 35px;
+            background-color: white;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            position: relative;
+        }
+        .text-cursor-container {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        .text-cursor-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+        .text-cursor-item {
+            position: absolute;
+            user-select: none;
+            white-space: nowrap;
+            font-size: 1.875rem;
+            pointer-events: none;
+            transform-origin: center;
+        }
+        @keyframes float {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(var(--base-angle, 0deg)); 
+            }
+            50% { 
+                transform: translate(var(--random-x, 0), var(--random-y, 0)) rotate(calc(var(--base-angle, 0deg) + var(--random-rotate, 0deg))); 
+            }
+        }
+        /* From Uiverse.io by Pradeepsaranbishnoi */ 
+        /* SWITCH */
+        .container .origin {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 111;
+            width: 2px;
+            height: 2px;
+            margin: -1px 0 0 -1px;
+            background-color: #f50;
+        }
+        .de {
+            user-select: none;
+            position: relative;
+            width: 230px;
+            height: 230px;
+            border-radius: 100%;
+            box-shadow: 0 0 25px rgba(0, 0, 0, .1);
+            background-color: transparent;
+        }
+        .de .den, .de .dene, .de .denem, .de .deneme, .de .light, .de .dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+        .den {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: -110px 0 0 -110px;
+            border-radius: 100%;
+            box-shadow: inset 0 3px 10px rgba(0, 0, 0, .6), 0 2px 20px rgba(255, 255, 255, 1);
+            background: #888888;
+            background: -moz-radial-gradient(center, ellipse cover, #888888 0%, #333333 100%);
+            background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #888888), color-stop(100%, #333333));
+            background: -webkit-radial-gradient(center, ellipse cover, #888888 0%, #333333 100%);
+            background: -o-radial-gradient(center, ellipse cover, #888888 0%, #333333 100%);
+        }
+        .dene {
+            z-index: 4;
+            width: 140px;
+            height: 140px;
+            margin: -70px 0 0 -70px;
+            border-radius: 100%;
+            box-shadow: inset 0 2px 2px rgba(255, 255, 255, .4), 0 3px 13px rgba(0, 0, 0, .85);
+            background: #f2f6f5;
+            background: -moz-linear-gradient(top, #f2f6f5 0%, #cbd5d6 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f2f6f5), color-stop(100%, #cbd5d6));
+            background: -webkit-linear-gradient(top, #f2f6f5 0%, #cbd5d6 100%);
+            background: -o-linear-gradient(top, #f2f6f5 0%, #cbd5d6 100%);
+        }
+        .denem {
+            width: 120px;
+            height: 120px;
+            margin: -60px 0 0 -60px;
+            border-radius: 100%;
+            background: #cbd5d6;
+            background: -moz-linear-gradient(top, #cbd5d6 0%, #f2f6f5 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #cbd5d6), color-stop(100%, #f2f6f5));
+            background: -webkit-linear-gradient(top, #cbd5d6 0%, #f2f6f5 100%);
+            background: -o-linear-gradient(top, #cbd5d6 0%, #f2f6f5 100%);
+        }
+        .deneme {
+            width: 100px;
+            height: 100px;
+            margin: -50px 0 0 -50px;
+            border-radius: 100%;
+            box-shadow: inset 0 2px 3px rgba(255, 255, 255, .6), 0 8px 20px rgba(0, 0, 0, .9);
+            background: #eef7f6;
+            background: -moz-linear-gradient(top, #eef7f6 0%, #8d989a 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #eef7f6), color-stop(100%, #8d989a));
+            background: -webkit-linear-gradient(top, #eef7f6 0%, #8d989a 100%);
+            background: -o-linear-gradient(top, #eef7f6 0%, #8d989a 100%);
+        }
+        .den .switch {
+            z-index: 3;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .den .switch label {
+            z-index: 2;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 70px;
+            margin-top: -35px;
+            transform-origin: 0% 50%;
+            -webkit-transform-origin: 0% 50%;
+            -o-transform-origin: 0% 50%;
+        }
+        .den .switch label:after {
+            content: "";
+            position: absolute;
+            top: 6px;
+            left: 1px;
+            width: 100%;
+            height: 30px;
+            transform: rotate(-30deg);
+            -webkit-transform: rotate(-30deg);
+            -o-transform: rotate(-30deg);
+        }
+        .den .switch label:before {
+            content: "";
+            position: absolute;
+            bottom: 6px;
+            left: 1px;
+            width: 100%;
+            height: 30px;
+            transform: rotate(30deg);
+            -webkit-transform: rotate(30deg);
+            -o-transform: rotate(30deg);
+        }
+        .den .switch label span {
+            z-index: 2;
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 100%;
+            font-weight: bold;
+            font-size: 15px;
+            line-height: 70px;
+            text-align: center;
+            color: #eee;
+            text-shadow: 0 1px 0 #444;
+        }
+        .den .switch label:nth-child(1) {
+            transform: rotate(-90deg);
+            -webkit-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+        }
+        .den .switch label:nth-child(1) span {
+            right: 2px;
+            font-size: 13px;
+            transform: rotate(90deg);
+            -webkit-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+        }
+        .den .switch label:nth-child(2) {
+            transform: rotate(-30deg);
+            -webkit-transform: rotate(-30deg);
+            -o-transform: rotate(-30deg);
+        }
+        .den .switch label:nth-child(2) span {
+            transform: rotate(30deg);
+            -webkit-transform: rotate(30deg);
+            -o-transform: rotate(30deg);
+        }
+        .den .switch label:nth-child(3) {
+            transform: rotate(30deg);
+            -webkit-transform: rotate(30deg);
+            -o-transform: rotate(30deg);
+        }
+        .den .switch label:nth-child(3) span {
+            transform: rotate(-30deg);
+            -webkit-transform: rotate(-30deg);
+            -o-transform: rotate(-30deg);
+        }
+        .den .switch label:nth-child(4) {
+            transform: rotate(90deg);
+            -webkit-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+        }
+        .den .switch label:nth-child(4) span {
+            transform: rotate(-90deg);
+            -webkit-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+        }
+        .den .switch label:nth-child(5) {
+            transform: rotate(150deg);
+            -webkit-transform: rotate(150deg);
+            -o-transform: rotate(150deg);
+        }
+        .den .switch label:nth-child(5) span {
+            transform: rotate(-150deg);
+            -webkit-transform: rotate(-150deg);
+            -o-transform: rotate(-150deg);
+        }
+        .den .switch label:nth-child(6) {
+            transform: rotate(210deg);
+            -webkit-transform: rotate(210deg);
+            -o-transform: rotate(210deg);
+        }
+        .den .switch label:nth-child(6) span {
+            transform: rotate(-210deg);
+            -webkit-transform: rotate(-210deg);
+            -o-transform: rotate(-210deg);
+        }
+        .den .switch input {
+            position: absolute;
+            opacity: 0;
+            visibility: hidden;
+        }
+        /* SWITCH LIGHT */
+        .den .light {
+            z-index: 1;
+            width: 50%;
+            height: 100px;
+            margin-top: -50px;
+            transform-origin: 0% 50%;
+            -webkit-transform-origin: 0% 50%;
+            -o-transform-origin: 0% 50%;
+            transform: rotate(-90deg);
+            -webkit-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            -webkit-transition: all .5s;
+            transition: all .5s;
+            -o-transition: all .5s;
+        }
+        .den .light span {
+            opacity: .4;
+            position: absolute;
+            top: 0;
+            left: 15px;
+            width: 100px;
+            height: 100px;
+            background: -moz-radial-gradient(center, ellipse cover, rgba(184, 163, 204, 1) 0%, rgba(159, 197, 224, 0.42) 42%, rgba(111, 113, 179, 0) 72%, rgba(67, 34, 137, 0) 100%);
+            background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(184, 163, 204, 1)), color-stop(42%, rgba(159, 197, 224, 0.42)), color-stop(72%, rgba(111, 113, 179, 0)), color-stop(100%, rgba(67, 34, 137, 0)));
+            background: -webkit-radial-gradient(center, ellipse cover, rgba(184, 163, 204, 1) 0%, rgba(159, 197, 224, 0.42) 42%, rgba(111, 113, 179, 0) 72%, rgba(67, 34, 137, 0) 100%);
+            background: -o-radial-gradient(center, ellipse cover, rgba(184, 163, 204, 1) 0%, rgba(159, 197, 224, 0.42) 42%, rgba(111, 113, 179, 0) 72%, rgba(67, 34, 137, 0) 100%);
+        }
+        /* SWITCH LIGHT POSITION */
+        .den #switch_off:checked ~ .light {
+            transform: rotate(-90deg);
+            -webkit-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+        }
+        .den #switch_1:checked ~ .light {
+            transform: rotate(-30deg);
+            -webkit-transform: rotate(-30deg);
+            -o-transform: rotate(-30deg);
+        }
+        .den #switch_2:checked ~ .light {
+            transform: rotate(30deg);
+            -webkit-transform: rotate(30deg);
+            -o-transform: rotate(30deg);
+        }
+        .den #switch_3:checked ~ .light {
+            transform: rotate(90deg);
+            -webkit-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+        }
+        .den #switch_4:checked ~ .light {
+            transform: rotate(150deg);
+            -webkit-transform: rotate(150deg);
+            -o-transform: rotate(150deg);
+        }
+        .den #switch_5:checked ~ .light {
+            transform: rotate(210deg);
+            -webkit-transform: rotate(210deg);
+            -o-transform: rotate(210deg);
+        }
+        /* SWITCH DOT */
+        .den .dot {
+            z-index: 6;
+            width: 50%;
+            height: 12px;
+            margin-top: -6px;
+            transform-origin: 0% 50%;
+            -webkit-transform-origin: 0% 50%;
+            -o-transform-origin: 0% 50%;
+            transition: all .5s;
+            -moz-transition: all .5s;
+            -o-transition: all .5s;
+        }
+        .den .dot span {
+            position: absolute;
+            top: 0;
+            left: 30px;
+            width: 12px;
+            height: 12px;
+            border-radius: 100%;
+            background: #dae2e4;
+            background: -moz-linear-gradient(top, #dae2e4 0%, #ecf5f4 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #dae2e4), color-stop(100%, #ecf5f4));
+            background: -webkit-linear-gradient(top, #dae2e4 0%, #ecf5f4 100%);
+            background: -o-linear-gradient(top, #dae2e4 0%, #ecf5f4 100%);
+        }
+        /* SWITCH DOT POSITION */
+        .den #switch_off:checked ~ .dot {
+            transform: rotate(-90deg);
+            -webkit-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+        }
+        .den #switch_off:checked ~ .dot span {
+            transform: rotate(90deg);
+            -webkit-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+        }
+        .den #switch_1:checked ~ .dot {
+            transform: rotate(-30deg);
+            -webkit-transform: rotate(-30deg);
+            -o-transform: rotate(-30deg);
+        }
+        .den #switch_1:checked ~ .dot span {
+            opacity: .9;
+            transform: rotate(30deg);
+            -webkit-transform: rotate(30deg);
+            -o-transform: rotate(30deg);
+        }
+        .den #switch_2:checked ~ .dot {
+            transform: rotate(30deg);
+            -webkit-transform: rotate(30deg);
+            -o-transform: rotate(30deg);
+        }
+        .den #switch_2:checked ~ .dot span {
+            opacity: .5;
+            transform: rotate(-30deg);
+            -webkit-transform: rotate(-30deg);
+            -o-transform: rotate(-30deg);
+        }
+        .den #switch_3:checked ~ .dot {
+            transform: rotate(90deg);
+            -webkit-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+        }
+        .den #switch_3:checked ~ .dot span {
+            opacity: .4;
+            transform: rotate(-90deg);
+            -webkit-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+        }
+        .den #switch_4:checked ~ .dot {
+            transform: rotate(150deg);
+            -webkit-transform: rotate(150deg);
+            -o-transform: rotate(150deg);
+        }
+        .den #switch_4:checked ~ .dot span {
+            opacity: .5;
+            transform: rotate(-150deg);
+            -webkit-transform: rotate(-150deg);
+            -o-transform: rotate(-150deg);
+        }
+        .den #switch_5:checked ~ .dot {
+            transform: rotate(210deg);
+            -webkit-transform: rotate(210deg);
+            -o-transform: rotate(210deg);
+        }
+        .den #switch_5:checked ~ .dot span {
+            opacity: .9;
+            transform: rotate(-210deg);
+            -webkit-transform: rotate(-210deg);
+            -o-transform: rotate(-210deg);
+        }
+        /* LINE */
+        .den hr.line {
+            z-index: 1;
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            height: 0;
+            margin-top: -1px;
+            border-width: 1px 0;
+            border-style: solid;
+            border-top-color: #3c3d3f;
+            border-bottom-color: #666769;
+        }
+        .den hr.line:nth-child(1) {
+            transform: rotate(-60deg);
+            -webkit-transform: rotate(-60deg);
+            -o-transform: rotate(-60deg);
+        }
+        .den hr.line:nth-child(2) {
+            transform: rotate(60deg);
+            -webkit-transform: rotate(60deg);
+            -o-transform: rotate(60deg);
+        }
+        /* CD Player Popup Container */
+        .switch-container {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .switch-container.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        /* Hide old rotary switch elements */
+        .switch-container .de,
+        .switch-container .den,
+        .switch-container .dene,
+        .switch-container .denem,
+        .switch-container .deneme,
+        .switch-container .light,
+        .switch-container .dot,
+        .switch-container .line {
+            display: none;
+        }
+        
+        /* CD Player Design */
+        .cd-player {
+            width: 220px;
+            height: 110px;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            border: 1px solid #444;
+        }
+        
+        /* CD Player Display */
+        .cd-display {
+            background: #0a0a0a;
+            border: 2px solid #333;
+            border-radius: 4px;
+            padding: 6px 10px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+            min-height: 24px;
+            display: flex;
+            align-items: center;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .cd-display.off {
+            color: #333;
+            text-shadow: none;
+        }
+        
+        /* CD Player Buttons */
+        .cd-buttons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cd-button {
+            background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 5px 10px;
+            color: #fff;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            user-select: none;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            position: relative;
+        }
+        
+        .cd-button:hover {
+            background: linear-gradient(145deg, #4a4a4a, #3a3a3a);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+        
+        .cd-button:active {
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+            transform: translateY(1px);
+        }
+        
+        .cd-button.active {
+            background: linear-gradient(145deg, #0066cc, #0055aa);
+            border-color: #0088ff;
+            box-shadow: 0 0 8px rgba(0, 136, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .cd-button.track {
+            min-width: 28px;
+            padding: 5px 6px;
+            font-weight: bold;
+        }
+        
+        /* Circle Button to Toggle CD Player */
+        .cd-player-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+            border: 2px solid #555;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #fff;
+            font-size: 18px;
+        }
+        
+        .cd-player-toggle:hover {
+            background: linear-gradient(145deg, #4a4a4a, #3a3a3a);
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+        }
+        
+        .cd-player-toggle.active {
+            background: linear-gradient(145deg, #0066cc, #0055aa);
+            border-color: #0088ff;
+            box-shadow: 0 0 15px rgba(0, 136, 255, 0.6);
+        }
+        
+        .cd-player-toggle::before {
+            content: '▶';
+        }
+        
+        .cd-player-toggle.active::before {
+            content: '✕';
+            font-size: 20px;
+        }
+        
+        /* Arrow pointing toward the top banner */
+        .vapemodel-arrow {
+            position: fixed;
+            top: 115px;
+            right: 60px;
+            width: 260px;
+            height: 120px;
+            z-index: 1000;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: arrowHover 1.8s ease-in-out infinite;
+        }
+        
+        .vapemodel-arrow::before {
+            content: none;
+        }
+        
+        .vapemodel-arrow::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 130px solid transparent;
+            border-right: 130px solid transparent;
+            border-bottom: 85px solid #ff1e56;
+            transform: translateY(-6px);
+        }
+        
+        @keyframes arrowHover {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-14px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dim-overlay"></div>
+    <!-- Dropdown Menu -->
+    <div class="dropdown">
+        <button class="menu-button">menu</button>
+        <div class="dropdown-content">
+            <a href="https://bonpit.com/downloads">downloads</a>
+            <a href="https://bonpit.com/portfolio">portfolio</a>
+            <a href="https://bonpit.com/vapestream">watch vapemodel</a>
+        </div>
+    </div>
+
+    <!-- Arrow pointing at vapemodel banner -->
+    <div class="vapemodel-arrow"></div>
+    
+    <!-- Vapemodel Series -->
+    <a href="https://bonpit.com/vapestream" class="vapemodel-header">
+        <div class="vapemodel-header-content">
+            <span>!WATCH THE VAPEMODELSERIES NOW!</span>
+            <span style="margin: 0 50px;">&nbsp;</span>
+            <span>!WATCH THE VAPEMODELSERIES NOW!</span>
+            <span style="margin: 0 50px;">&nbsp;</span>
+            <span>!WATCH THE VAPEMODELSERIES NOW!</span>
+            <span style="margin: 0 50px;">&nbsp;</span>
+            <span>!WATCH THE VAPEMODELSERIES NOW!</span>
+            <span style="margin: 0 50px;">&nbsp;</span>
+            <span>!WATCH THE VAPEMODELSERIES NOW!</span>
+            <span style="margin: 0 50px;">&nbsp;</span>
+            <span>!WATCH THE VAPEMODELSERIES NOW!</span>
+            <span style="margin: 0 50px;">&nbsp;</span>
+            <span>!WATCH THE VAPEMODELSERIES NOW!</span>
+            <span style="margin: 0 50px;">&nbsp;</span>
+            <span>!WATCH THE VAPEMODELSERIES NOW!</span>
+            <span style="margin: 0 50px;">&nbsp;</span>
+            <span>!WATCH THE VAPEMODELSERIES NOW!</span>
+            <span style="margin: 0 50px;">&nbsp;</span>
+            <span>!WATCH THE VAPEMODELSERIES NOW!</span>
+        </div>
+    </a>
+
+    <!-- Headline -->
+    <h1>hello-world!</h1>
+
+    <!-- Clickable links -->
+    <div>
+        <div>
+            <a href="https://bonpit.bandcamp.com" target="_blank">
+                <span class="red-ball"></span>bandcamp
+            </a>
+            <a href="https://soundcloud.com/bbonpit" target="_blank">
+                <span class="red-ball"></span>soundcloud
+            </a>
+            <a href="https://open.spotify.com/intl-de/artist/29b71g7EtIfJnjSA0nGDzU?si=rXie0MY_Tx2Tl46PF_hBHQ" target="_blank">
+                <span class="red-ball"></span>spotify
+            </a>
+            <a href="https://www.instagram.com/bonpit_/" target="_blank">
+                <span class="red-ball"></span>instagram
+            </a>
+        </div>
+    </div>
+
+    <!-- Bookings & Inquiries Text -->
+    <div class="bookings">Bookings & inquiries</div>
+
+    <!-- Contact email (mailto link) -->
+    <div class="email"><a href="mailto:admin@bonpit.com">admin@bonpit.com</a></div>
+
+    <!-- Circle Button to Toggle CD Player -->
+    <div class="cd-player-toggle" id="cdPlayerToggle"></div>
+    
+    <!-- CD Player Popup (Fixed at bottom right) -->
+    <div class="switch-container" id="cdPlayerContainer">
+        <div class="container">
+            <div class="cd-player">
+                <div class="cd-display" id="cdDisplay">OFF</div>
+                <div class="cd-buttons">
+                    <label for="switch_off" class="cd-button">OFF</label>
+                    <label for="switch_1" class="cd-button track">1</label>
+                    <label for="switch_2" class="cd-button track">2</label>
+                    <label for="switch_3" class="cd-button track">3</label>
+                    <label for="switch_4" class="cd-button track">4</label>
+                    <label for="switch_5" class="cd-button track">5</label>
+                </div>
+                
+                <!-- Hidden radio inputs for functionality -->
+                <input type="radio" checked="" name="switch" id="switch_off" style="position: absolute; opacity: 0; pointer-events: none;">
+                <input type="radio" name="switch" id="switch_1" style="position: absolute; opacity: 0; pointer-events: none;">
+                <input type="radio" name="switch" id="switch_2" style="position: absolute; opacity: 0; pointer-events: none;">
+                <input type="radio" name="switch" id="switch_3" style="position: absolute; opacity: 0; pointer-events: none;">
+                <input type="radio" name="switch" id="switch_4" style="position: absolute; opacity: 0; pointer-events: none;">
+                <input type="radio" name="switch" id="switch_5" style="position: absolute; opacity: 0; pointer-events: none;">
+                
+                <!-- Keep old structure hidden for compatibility -->
+                <div class="de" style="display: none;">
+                    <div class="den">
+                        <hr class="line">
+                        <hr class="line">
+                        <hr class="line">
+                        <div class="switch">
+                            <label for="switch_off"><span>OFF</span></label>
+                            <label for="switch_1"><span>1</span></label>
+                            <label for="switch_2"><span>2</span></label>
+                            <label for="switch_3"><span>3</span></label>
+                            <label for="switch_4"><span>4</span></label>
+                            <label for="switch_5"><span>5</span></label>
+                            <div class="light"><span></span></div>
+                            <div class="dot"><span></span></div>
+                            <div class="dene">
+                                <div class="denem">
+                                    <div class="deneme"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add dimmed background when hovering over menu and dropdown options
+        const menuButton = document.querySelector('.menu-button');
+        const dropdown = document.querySelector('.dropdown');
+        const dropdownLinks = document.querySelectorAll('.dropdown-content a');
+        const body = document.body;
+        
+        // Dim when hovering over menu button
+        if (menuButton) {
+            menuButton.addEventListener('mouseenter', () => {
+                body.classList.add('dimmed');
+            });
+            menuButton.addEventListener('mouseleave', () => {
+                // Only remove dim if not hovering over dropdown
+                if (!dropdown.matches(':hover')) {
+                    body.classList.remove('dimmed');
+                }
+            });
+        }
+        
+        // Dim when hovering over dropdown container
+        if (dropdown) {
+            dropdown.addEventListener('mouseenter', () => {
+                body.classList.add('dimmed');
+            });
+            dropdown.addEventListener('mouseleave', () => {
+                body.classList.remove('dimmed');
+            });
+        }
+        
+        // Keep dimmed when hovering over dropdown links
+        dropdownLinks.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                body.classList.add('dimmed');
+            });
+        });
+    </script>
+    
+    <script>
+        // TextCursor Component - Vanilla JavaScript version
+        class TextCursor {
+            constructor(options = {}) {
+                this.text = options.text || '⚛️';
+                this.delay = options.delay || 0.01;
+                this.spacing = options.spacing || 100;
+                this.followMouseDirection = options.followMouseDirection !== false;
+                this.randomFloat = options.randomFloat !== false;
+                this.exitDuration = options.exitDuration || 0.5;
+                this.removalInterval = options.removalInterval || 30;
+                this.maxPoints = options.maxPoints || 5;
+                
+                this.trail = [];
+                this.idCounter = 0;
+                this.lastMoveTime = Date.now();
+                
+                this.init();
+            }
+            
+            init() {
+                // Create container
+                this.container = document.createElement('div');
+                this.container.className = 'text-cursor-container';
+                this.inner = document.createElement('div');
+                this.inner.className = 'text-cursor-inner';
+                this.container.appendChild(this.inner);
+                document.body.appendChild(this.container);
+                
+                // Bind event handler
+                this.handleMouseMove = this.handleMouseMove.bind(this);
+                document.addEventListener('mousemove', this.handleMouseMove);
+                
+                // Start removal interval
+                this.removalIntervalId = setInterval(() => {
+                    if (Date.now() - this.lastMoveTime > 100) {
+                        this.removeOldest();
+                    }
+                }, this.removalInterval);
+            }
+            
+            handleMouseMove(e) {
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                
+                if (this.trail.length === 0) {
+                    this.addPoint(mouseX, mouseY, 0);
+                } else {
+                    const last = this.trail[this.trail.length - 1];
+                    const dx = mouseX - last.x;
+                    const dy = mouseY - last.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance >= this.spacing) {
+                        let rawAngle = (Math.atan2(dy, dx) * 180) / Math.PI;
+                        if (rawAngle > 90) rawAngle -= 180;
+                        else if (rawAngle < -90) rawAngle += 180;
+                        const computedAngle = this.followMouseDirection ? rawAngle : 0;
+                        
+                        const steps = Math.floor(distance / this.spacing);
+                        for (let i = 1; i <= steps; i++) {
+                            const t = (this.spacing * i) / distance;
+                            const newX = last.x + dx * t;
+                            const newY = last.y + dy * t;
+                            this.addPoint(newX, newY, computedAngle);
+                        }
+                    }
+                }
+                
+                if (this.trail.length > this.maxPoints) {
+                    this.trail = this.trail.slice(this.trail.length - this.maxPoints);
+                    this.updateDOM();
+                }
+                
+                this.lastMoveTime = Date.now();
+            }
+            
+            addPoint(x, y, angle) {
+                const point = {
+                    id: this.idCounter++,
+                    x: x,
+                    y: y,
+                    angle: angle,
+                    element: null,
+                    randomX: this.randomFloat ? Math.random() * 10 - 5 : 0,
+                    randomY: this.randomFloat ? Math.random() * 10 - 5 : 0,
+                    randomRotate: this.randomFloat ? Math.random() * 10 - 5 : 0
+                };
+                
+                this.trail.push(point);
+                this.createElement(point);
+            }
+            
+            createElement(point) {
+                const element = document.createElement('div');
+                element.className = 'text-cursor-item';
+                element.textContent = this.text;
+                element.style.left = point.x + 'px';
+                element.style.top = point.y + 'px';
+                element.style.opacity = '0';
+                
+                if (this.randomFloat) {
+                    element.style.setProperty('--random-x', point.randomX + 'px');
+                    element.style.setProperty('--random-y', point.randomY + 'px');
+                    element.style.setProperty('--base-angle', point.angle + 'deg');
+                    element.style.setProperty('--random-rotate', point.randomRotate + 'deg');
+                    element.style.animation = `float 2s ease-in-out infinite`;
+                } else {
+                    element.style.transform = `rotate(${point.angle}deg)`;
+                }
+                
+                this.inner.appendChild(element);
+                point.element = element;
+                
+                // Animate in
+                requestAnimationFrame(() => {
+                    element.style.transition = `opacity ${this.exitDuration}s ease-out ${this.delay}s`;
+                    element.style.opacity = '1';
+                });
+            }
+            
+            removeOldest() {
+                if (this.trail.length > 0) {
+                    const point = this.trail.shift();
+                    if (point.element) {
+                        point.element.style.transition = `opacity ${this.exitDuration}s ease-out, transform ${this.exitDuration}s ease-out`;
+                        point.element.style.opacity = '0';
+                        point.element.style.transform = 'scale(0)';
+                        setTimeout(() => {
+                            if (point.element && point.element.parentNode) {
+                                point.element.parentNode.removeChild(point.element);
+                            }
+                        }, this.exitDuration * 1000);
+                    }
+                }
+            }
+            
+            updateDOM() {
+                // Remove elements that are no longer in trail
+                const currentIds = new Set(this.trail.map(p => p.id));
+                const elements = Array.from(this.inner.querySelectorAll('.text-cursor-item'));
+                elements.forEach(el => {
+                    const point = this.trail.find(p => p.element === el);
+                    if (!point) {
+                        el.style.transition = `opacity ${this.exitDuration}s ease-out, transform ${this.exitDuration}s ease-out`;
+                        el.style.opacity = '0';
+                        el.style.transform = 'scale(0)';
+                        setTimeout(() => {
+                            if (el.parentNode) {
+                                el.parentNode.removeChild(el);
+                            }
+                        }, this.exitDuration * 1000);
+                    }
+                });
+            }
+            
+            destroy() {
+                document.removeEventListener('mousemove', this.handleMouseMove);
+                if (this.removalIntervalId) {
+                    clearInterval(this.removalIntervalId);
+                }
+                if (this.container && this.container.parentNode) {
+                    this.container.parentNode.removeChild(this.container);
+                }
+            }
+        }
+        
+        // Initialize TextCursor when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.textCursor = new TextCursor({
+                text: 'f*ck',
+                delay: 0.01,
+                spacing: 80,
+                followMouseDirection: true,
+                randomFloat: true,
+                exitDuration: 0.3,
+                removalInterval: 20,
+                maxPoints: 10
+            });
+        });
+    </script>
+    
+    <script src="https://w.soundcloud.com/player/api.js"></script>
+    <script>
+        // SoundCloud player functionality for all switch positions
+        const soundcloudTracks = {
+            'switch_1': 'https://soundcloud.com/bbonpit/lostintime',
+            'switch_2': 'https://soundcloud.com/bbonpit/onetwothreefour',
+            'switch_3': 'https://soundcloud.com/bbonpit/bonpit-worth-it-1',
+            'switch_4': 'https://soundcloud.com/bbonpit/sadsadsad',
+            'switch_5': 'https://soundcloud.com/bbonpit/4ever'
+        };
+        
+        let soundcloudWidgets = {};
+        let currentPlayingWidget = null;
+        
+        // Create hidden SoundCloud iframe for a track
+        function createSoundCloudPlayer(trackId, trackUrl) {
+            const iframe = document.createElement('iframe');
+            iframe.id = `soundcloud-player-${trackId}`;
+            iframe.width = '0';
+            iframe.height = '0';
+            iframe.style.display = 'none';
+            iframe.allow = 'autoplay';
+            iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(trackUrl)}&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false&loop=true`;
+            document.body.appendChild(iframe);
+            
+            // Initialize widget when ready
+            iframe.onload = function() {
+                if (window.SC) {
+                    soundcloudWidgets[trackId] = SC.Widget(iframe);
+                } else {
+                    // Wait for SC to be available
+                    const checkSC = setInterval(() => {
+                        if (window.SC) {
+                            soundcloudWidgets[trackId] = SC.Widget(iframe);
+                            clearInterval(checkSC);
+                        }
+                    }, 100);
+                }
+            };
+        }
+        
+        // Play a specific track
+        function playTrack(trackId) {
+            // Stop currently playing track
+            if (currentPlayingWidget) {
+                currentPlayingWidget.pause();
+                currentPlayingWidget = null;
+            }
+            
+            // Play new track
+            if (soundcloudWidgets[trackId]) {
+                currentPlayingWidget = soundcloudWidgets[trackId];
+                currentPlayingWidget.play();
+                currentPlayingWidget.setVolume(50);
+            } else {
+                // Wait for widget to be ready
+                const checkWidget = setInterval(() => {
+                    if (soundcloudWidgets[trackId]) {
+                        currentPlayingWidget = soundcloudWidgets[trackId];
+                        currentPlayingWidget.play();
+                        currentPlayingWidget.setVolume(50);
+                        clearInterval(checkWidget);
+                    }
+                }, 100);
+            }
+        }
+        
+        // Stop all tracks
+        function stopAllTracks() {
+            if (currentPlayingWidget) {
+                currentPlayingWidget.pause();
+                currentPlayingWidget = null;
+            }
+            // Also pause all widgets to be safe
+            Object.values(soundcloudWidgets).forEach(widget => {
+                if (widget) {
+                    widget.pause();
+                }
+            });
+        }
+        
+        // Track names for display (will be updated from SoundCloud)
+        let trackNames = {
+            'switch_off': 'OFF',
+            'switch_1': 'Loading...',
+            'switch_2': 'Loading...',
+            'switch_3': 'Loading...',
+            'switch_4': 'Loading...',
+            'switch_5': 'Loading...'
+        };
+        
+        // Fetch track titles from SoundCloud
+        async function fetchTrackTitles() {
+            const trackUrls = {
+                'switch_1': 'https://soundcloud.com/bbonpit/lostintime',
+                'switch_2': 'https://soundcloud.com/bbonpit/onetwothreefour',
+                'switch_3': 'https://soundcloud.com/bbonpit/bonpit-worth-it-1',
+                'switch_4': 'https://soundcloud.com/bbonpit/sadsadsad',
+                'switch_5': 'https://soundcloud.com/bbonpit/4ever'
+            };
+            
+            for (const [trackId, trackUrl] of Object.entries(trackUrls)) {
+                try {
+                    // Use SoundCloud oEmbed API to get track info
+                    const oembedUrl = `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(trackUrl)}`;
+                    const response = await fetch(oembedUrl);
+                    const data = await response.json();
+                    
+                    if (data.title) {
+                        // Extract just the track name (remove artist if present)
+                        let title = data.title;
+                        // Remove "by ArtistName" pattern if it exists
+                        title = title.replace(/\s+by\s+.*$/i, '');
+                        // Truncate if too long for display
+                        if (title.length > 20) {
+                            title = title.substring(0, 17) + '...';
+                        }
+                        trackNames[trackId] = title.toUpperCase();
+                        
+                        // Update display if this track is currently selected
+                        const display = document.getElementById('cdDisplay');
+                        const checkedInput = document.querySelector('input[name="switch"]:checked');
+                        if (display && checkedInput && checkedInput.id === trackId) {
+                            display.textContent = trackNames[trackId];
+                        }
+                    }
+                } catch (error) {
+                    console.log(`Could not fetch title for ${trackId}:`, error);
+                    trackNames[trackId] = 'TRACK ' + trackId.replace('switch_', '');
+                }
+            }
+        }
+        
+        // Update CD player display and button states
+        function updateCDPlayer(selectedId) {
+            const display = document.getElementById('cdDisplay');
+            const buttons = document.querySelectorAll('.cd-button');
+            
+            // Update display
+            if (display) {
+                display.textContent = trackNames[selectedId] || 'OFF';
+                display.classList.toggle('off', selectedId === 'switch_off');
+            }
+            
+            // Update button states
+            buttons.forEach(button => {
+                const label = button.getAttribute('for');
+                if (label === selectedId) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+        
+        // Handle switch changes
+        function handleSwitchChange() {
+            const switchInputs = document.querySelectorAll('input[name="switch"]');
+            
+            switchInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const selectedId = this.id;
+                    
+                    // Update CD player display and buttons
+                    updateCDPlayer(selectedId);
+                    
+                    if (this.id === 'switch_off' && this.checked) {
+                        // Stop all tracks when switched to OFF
+                        stopAllTracks();
+                    } else if (this.checked && soundcloudTracks[this.id]) {
+                        // Play the track for the selected position
+                        playTrack(this.id);
+                    }
+                });
+            });
+            
+            // Initialize display
+            const checkedInput = document.querySelector('input[name="switch"]:checked');
+            if (checkedInput) {
+                updateCDPlayer(checkedInput.id);
+            }
+        }
+        
+        // Toggle CD Player popup
+        function initCDPlayerToggle() {
+            const toggle = document.getElementById('cdPlayerToggle');
+            const container = document.getElementById('cdPlayerContainer');
+            
+            if (toggle && container) {
+                toggle.addEventListener('click', () => {
+                    container.classList.toggle('open');
+                    toggle.classList.toggle('active');
+                });
+                
+                // Close when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (container.classList.contains('open')) {
+                        if (!container.contains(e.target) && !toggle.contains(e.target)) {
+                            container.classList.remove('open');
+                            toggle.classList.remove('active');
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Create players for all tracks
+            Object.keys(soundcloudTracks).forEach(trackId => {
+                createSoundCloudPlayer(trackId, soundcloudTracks[trackId]);
+            });
+            
+            handleSwitchChange();
+            initCDPlayerToggle();
+            
+            // Fetch track titles from SoundCloud
+            fetchTrackTitles();
+        });
+    </script>
+</body>
+</html>
