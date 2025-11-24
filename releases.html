@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Releases - Bonpit</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Sora', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 140px 20px 40px;
+            min-height: 100vh;
+        }
+        
+        #top-dock {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 999px;
+            z-index: 250;
+        }
+        
+        #top-dock a {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-decoration: none;
+            text-transform: lowercase;
+            color: #ffffff;
+            opacity: 0.75;
+            transition: opacity 0.2s ease;
+        }
+        
+        #top-dock a:hover {
+            opacity: 1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            margin-bottom: 60px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        
+        .release-item {
+            margin-bottom: 80px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .release-item:last-child {
+            border-bottom: none;
+        }
+        
+        .release-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        
+        .release-date {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .bandcamp-player {
+            width: 100%;
+            max-width: 700px;
+            margin: 24px 0 0;
+        }
+        
+        .bandcamp-player iframe {
+            border: 0;
+            width: 200px;
+            height: 200px;
+        }
+        
+        .release-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+        
+        .release-link:hover {
+            color: #ffffff;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .release-title {
+                font-size: 20px;
+            }
+            
+            .release-item {
+                margin-bottom: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="top-dock">
+        <a href="https://bonpit.com/releases" target="_blank" rel="noopener">releases</a>
+        <a href="https://bonpit.com/vapestream" target="_blank" rel="noopener">watch vapemodel</a>
+        <a href="https://bonpit.com/portfolio" target="_blank" rel="noopener">portfolio</a>
+        <a href="mailto:admin@bonpit.com">contact</a>
+    </nav>
+    <div class="container">
+        <header>
+            <h1>Releases</h1>
+        </header>
+        
+        <div class="release-item">
+            <div class="release-title">Igvapemodels</div>
+            <div class="bandcamp-player">
+                <iframe style="border: 0; width: 200px; height: 200px;" src="https://bandcamp.com/EmbeddedPlayer/track=590968084/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless>
+                    <a href="https://bonpit.bandcamp.com/track/igvapemodels">Igvapemodels by Bonpit</a>
+                </iframe>
+            </div>
+            <div class="release-date">November 2025</div>
+            <a href="https://bonpit.bandcamp.com/track/igvapemodels" target="_blank" class="release-link">Listen on Bandcamp →</a>
+        </div>
+        
+        <div class="release-item">
+            <div class="release-title">Lost In Time</div>
+            <div class="bandcamp-player">
+                <iframe style="border: 0; width: 200px; height: 200px;" src="https://bandcamp.com/EmbeddedPlayer/track=2856871187/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless>
+                    <a href="https://bonpit.bandcamp.com/track/lost-in-time">Lost In Time by Bonpit</a>
+                </iframe>
+            </div>
+            <div class="release-date">October 2025</div>
+            <a href="https://bonpit.bandcamp.com/track/lost-in-time" target="_blank" class="release-link">Listen on Bandcamp →</a>
+        </div>
+        
+        <div class="release-item">
+            <div class="release-title">1234</div>
+            <div class="bandcamp-player">
+                <iframe style="border: 0; width: 200px; height: 200px;" src="https://bandcamp.com/EmbeddedPlayer/track=3254085848/size=large/bgcol=ffffff/linkcol=f171a2/minimal=true/transparent=true/" seamless>
+                    <a href="https://bonpit.bandcamp.com/track/1234">1234 by Bonpit</a>
+                </iframe>
+            </div>
+            <div class="release-date">August 2025</div>
+            <a href="https://bonpit.bandcamp.com/track/1234" target="_blank" class="release-link">Listen on Bandcamp →</a>
+        </div>
+        
+        <div class="release-item">
+            <div class="release-title">me, me, me</div>
+            <div class="bandcamp-player">
+                <iframe style="border: 0; width: 200px; height: 200px;" src="https://bandcamp.com/EmbeddedPlayer/album=1979916347/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless>
+                    <a href="https://bonpit.bandcamp.com/album/me-me-me">me, me, me by Bonpit</a>
+                </iframe>
+            </div>
+            <div class="release-date">July 2025</div>
+            <a href="https://bonpit.bandcamp.com/album/me-me-me" target="_blank" class="release-link">Listen on Bandcamp →</a>
+        </div>
+        
+        <div class="release-item">
+            <div class="release-title">4Ever</div>
+            <div class="bandcamp-player">
+                <iframe style="border: 0; width: 200px; height: 200px;" src="https://bandcamp.com/EmbeddedPlayer/track=3693374368/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless>
+                    <a href="https://bonpit.bandcamp.com/track/4ever">4Ever by Bonpit</a>
+                </iframe>
+            </div>
+            <div class="release-date">December 2024</div>
+            <a href="https://bonpit.bandcamp.com/track/4ever" target="_blank" class="release-link">Listen on Bandcamp →</a>
+        </div>
+        
+        <div class="release-item">
+            <div class="release-title">Papi</div>
+            <div class="bandcamp-player">
+                <iframe style="border: 0; width: 200px; height: 200px;" src="https://bandcamp.com/EmbeddedPlayer/track=3383338772/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless>
+                    <a href="https://bonpit.bandcamp.com/track/papi">Papi by Bonpit</a>
+                </iframe>
+            </div>
+            <div class="release-date">October 2024</div>
+            <a href="https://bonpit.bandcamp.com/track/papi" target="_blank" class="release-link">Listen on Bandcamp →</a>
+        </div>
+        
+        <div class="release-item">
+            <div class="release-title">HIPSHOTS</div>
+            <div class="bandcamp-player">
+                <iframe style="border: 0; width: 200px; height: 200px;" src="https://bandcamp.com/EmbeddedPlayer/album=44762957/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless>
+                    <a href="https://bonpit.bandcamp.com/album/hipshots">HIPSHOTS by Bonpit</a>
+                </iframe>
+            </div>
+            <div class="release-date">June 2024</div>
+            <a href="https://bonpit.bandcamp.com/album/hipshots" target="_blank" class="release-link">Listen on Bandcamp →</a>
+        </div>
+        
+        <div class="release-item">
+            <div class="release-title">lëv me</div>
+            <div class="bandcamp-player">
+                <iframe style="border: 0; width: 200px; height: 200px;" src="https://bandcamp.com/EmbeddedPlayer/track=132274032/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless>
+                    <a href="https://bonpit.bandcamp.com/track/l-v-me">lëv me by Bonpit</a>
+                </iframe>
+            </div>
+            <div class="release-date">November 2023</div>
+            <a href="https://bonpit.bandcamp.com/track/l-v-me" target="_blank" class="release-link">Listen on Bandcamp →</a>
+        </div>
+        
+        <div class="release-item">
+            <div class="release-title">*Beau*</div>
+            <div class="bandcamp-player">
+                <iframe style="border: 0; width: 200px; height: 200px;" src="https://bandcamp.com/EmbeddedPlayer/album=3388828628/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless>
+                    <a href="https://bonpit.bandcamp.com/album/beau-2">'*Beau*' by Bonpit</a>
+                </iframe>
+            </div>
+            <div class="release-date">August 2023</div>
+            <a href="https://bonpit.bandcamp.com/album/beau-2" target="_blank" class="release-link">Listen on Bandcamp →</a>
+        </div>
+        
+        <div class="release-item">
+            <div class="release-title">1-5 (Fifteen Edit)</div>
+            <div class="bandcamp-player">
+                <iframe style="border: 0; width: 200px; height: 200px;" src="https://bandcamp.com/EmbeddedPlayer/track=279887926/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/" seamless>
+                    <a href="https://bonpit.bandcamp.com/track/1-5-fifteen-edit">1-5 (Fifteen Edit) by Bonpit</a>
+                </iframe>
+            </div>
+            <div class="release-date">March 2023</div>
+            <a href="https://bonpit.bandcamp.com/track/1-5-fifteen-edit" target="_blank" class="release-link">Listen on Bandcamp →</a>
+        </div>
+    </div>
+    
+</body>
+</html>
+

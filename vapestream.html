@@ -6,23 +6,62 @@
     <title>Vapemodel Player - Shit I broke the Internet</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
         body {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            justify-content: center;
+            height: 100vh;
             margin: 0;
-            padding-top: 80px;
-            padding-bottom: 100px;
-            font-family: Arial, sans-serif;
+            padding-top: 0;
+            font-family: 'Sora', sans-serif;
             text-align: center;
-            background-color: black;
-            color: red;
+            background-color: #000000;
+            color: blue;
+            position: relative;
+            overflow: hidden;
+        }
+        #top-dock {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 28px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 999px;
+            z-index: 1002;
+            box-sizing: border-box;
+        }
+        
+        #top-dock a {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-decoration: none;
+            text-transform: lowercase;
+            color: #ffffff;
+            opacity: 0.75;
+            transition: opacity 0.2s ease;
+            line-height: 1;
+            white-space: nowrap;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        #top-dock a:hover {
+            opacity: 1;
         }
         h1 {
             position: fixed;
-            top: 20px;
+            top: 85px;
             left: 0;
             right: 0;
             width: 100%;
@@ -31,21 +70,33 @@
             margin: 0;
             padding: 0;
             text-transform: lowercase;
-            color: red;
+            color: blue;
             z-index: 1001;
             pointer-events: none;
         }
         .part-title {
+            position: fixed;
+            top: 130px;
+            left: 0;
+            right: 0;
+            width: 100%;
             font-size: 24px;
-            color: red;
-            margin-bottom: 20px;
+            color: blue;
+            margin: 0;
+            padding: 0;
             text-align: center;
             font-weight: bold;
+            z-index: 1001;
+            pointer-events: none;
         }
         .slider-container {
             position: relative;
             width: 100%;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
         }
         .slider-wrapper {
             display: flex;
@@ -53,16 +104,20 @@
         }
         .video-section {
             min-width: 100%;
-            margin-bottom: 60px;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 0;
         }
         .slider-nav {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background-color: rgba(255, 0, 0, 0.7);
-            color: black;
-            border: 2px solid red;
+            background-color: rgba(0, 0, 255, 0.7);
+            color: white;
+            border: 2px solid blue;
             width: 50px;
             height: 50px;
             cursor: pointer;
@@ -74,7 +129,7 @@
             transition: background-color 0.3s;
         }
         .slider-nav:hover {
-            background-color: red;
+            background-color: blue;
         }
         .slider-nav.prev {
             left: 20px;
@@ -86,47 +141,79 @@
             position: fixed;
             top: 20px;
             left: 20px;
-            color: red;
+            color: blue;
             text-decoration: underline;
             font-size: 18px;
             z-index: 1001;
         }
         .back-button:hover {
-            color: darkred;
+            color: darkblue;
         }
         .content-wrapper {
             display: flex;
+            flex-direction: row;
             gap: 20px;
-            align-items: flex-start;
+            align-items: center;
             justify-content: center;
         }
         .video-container {
             position: relative;
+            width: 1000px;
+            height: 800px;
+            background-image: url('https://raw.githubusercontent.com/git34r/hello-world/main/port/ytoverlay_stream.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .video-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://raw.githubusercontent.com/git34r/hello-world/main/port/ytoverlay_stream.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 1;
+            pointer-events: none;
         }
         .video-container iframe {
             display: block;
             border: none;
+            position: absolute;
+            z-index: 2;
+            width: 533px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         .chat-container {
-            width: 350px;
-            height: 315px;
-            border: 2px solid red;
-            background-color: rgba(0, 0, 0, 0.8);
+            width: 220px;
+            height: 200px;
+            border: 2px solid blue;
+            background-color: rgba(255, 255, 255, 0.9);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
         .chat-header {
             padding: 10px;
-            border-bottom: 2px solid red;
-            background-color: rgba(255, 0, 0, 0.1);
+            border-bottom: 2px solid blue;
+            background-color: rgba(0, 0, 255, 0.1);
             font-weight: bold;
-            color: red;
+            color: blue;
             text-align: left;
         }
         .chat-messages {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 10px;
             display: flex;
             flex-direction: column;
@@ -135,9 +222,9 @@
         .chat-message {
             text-align: left;
             padding: 8px;
-            background-color: rgba(255, 0, 0, 0.05);
-            border-left: 2px solid red;
-            color: red;
+            background-color: rgba(0, 0, 255, 0.05);
+            border-left: 2px solid blue;
+            color: blue;
             font-size: 14px;
             line-height: 1.4;
             animation: slideIn 0.3s ease-out;
@@ -167,45 +254,45 @@
             display: inline-block;
             width: 12px;
             height: 12px;
-            background-color: red;
+            background-color: blue;
             border-radius: 50%;
             margin-right: 4px;
             vertical-align: middle;
         }
         .chat-input-container {
-            border-top: 2px solid red;
+            border-top: 2px solid blue;
             padding: 10px;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             display: flex;
             gap: 8px;
         }
         .chat-input {
             flex: 1;
-            background-color: rgba(255, 0, 0, 0.1);
-            border: 1px solid red;
-            color: red;
+            background-color: rgba(0, 0, 255, 0.1);
+            border: 1px solid blue;
+            color: blue;
             padding: 8px;
             font-size: 14px;
-            font-family: Arial, sans-serif;
+            font-family: 'Sora', sans-serif;
         }
         .chat-input::placeholder {
             color: #666;
         }
         .chat-input:focus {
             outline: none;
-            border-color: #ff6666;
+            border-color: #6666ff;
         }
         .chat-send-btn {
-            background-color: red;
-            color: black;
-            border: 1px solid red;
+            background-color: blue;
+            color: white;
+            border: 1px solid blue;
             padding: 8px 15px;
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
         }
         .chat-send-btn:hover {
-            background-color: #ff6666;
+            background-color: #6666ff;
         }
         .bottom-section {
             position: fixed;
@@ -214,7 +301,7 @@
             right: 0;
             width: 100%;
             padding: 15px;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(255, 255, 255, 0.9);
             z-index: 1000;
         }
         .bottom-center {
@@ -235,12 +322,12 @@
             z-index: 1001;
         }
         .watch-youtube-link {
-            color: red;
+            color: blue;
             text-decoration: underline;
             font-size: 18px;
         }
         .watch-youtube-link:hover {
-            color: darkred;
+            color: darkblue;
         }
         .bottom-left .bookings {
             margin-top: 0;
@@ -250,14 +337,14 @@
             margin-top: 0;
         }
         .bookings {
-            font-size: 15px;
-            color: red;
+            font-size: 12px;
+            color: blue;
             margin-top: 35px;
             text-transform: uppercase;
         }
         .email a {
             font-size: 30px;
-            color: red;
+            color: blue;
             text-transform: lowercase;
             margin-top: 10px;
             text-decoration: none;
@@ -269,20 +356,26 @@
     </style>
 </head>
 <body>
+    <nav id="top-dock">
+        <a href="https://bonpit.com/releases" target="_blank" rel="noopener">releases</a>
+        <a href="https://bonpit.com/vapestream" target="_blank" rel="noopener">watch vapemodel</a>
+        <a href="https://bonpit.com/portfolio" target="_blank" rel="noopener">portfolio</a>
+        <a href="mailto:admin@bonpit.com">contact</a>
+    </nav>
     <a href="index.html" class="back-button">back</a>
     <h1>!vapestream!</h1>
+    <div class="part-title" id="partTitle">Part 1: Origin Story</div>
     
     <div class="slider-container">
         <button class="slider-nav prev" id="prevBtn">‹</button>
         <button class="slider-nav next" id="nextBtn">›</button>
         <div class="slider-wrapper" id="sliderWrapper">
             <div class="video-section">
-                <div class="part-title">Part 1: Origin Story</div>
                 <div class="content-wrapper">
                     <div class="video-container">
                         <iframe 
-                            width="560" 
-                            height="315" 
+                            width="720" 
+                            height="405" 
                             src="https://www.youtube.com/embed/rXvCHTzxc18" 
                             title="YouTube video player" 
                             frameborder="0" 
@@ -304,12 +397,11 @@
             </div>
             
             <div class="video-section">
-                <div class="part-title">Part 2: Old Enough</div>
                 <div class="content-wrapper">
                     <div class="video-container">
                         <iframe 
-                            width="560" 
-                            height="315" 
+                            width="720" 
+                            height="405" 
                             src="https://www.youtube.com/embed/k_qe5QTgbxI" 
                             title="YouTube video player" 
                             frameborder="0" 
@@ -555,11 +647,16 @@
         const sliderWrapper = document.getElementById('sliderWrapper');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const partTitle = document.getElementById('partTitle');
         let currentSlide = 0;
         const totalSlides = 2;
+        const partTitles = ['Part 1: Origin Story', 'Part 2: Old Enough'];
         
         function updateSlider() {
             sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            if (partTitle) {
+                partTitle.textContent = partTitles[currentSlide];
+            }
         }
         
         nextBtn.addEventListener('click', () => {
@@ -570,6 +667,17 @@
         prevBtn.addEventListener('click', () => {
             currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
             updateSlider();
+        });
+        
+        // Simple arrow key navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                updateSlider();
+            } else if (e.key === 'ArrowRight') {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateSlider();
+            }
         });
     </script>
 </body>
