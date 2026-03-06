@@ -1,0 +1,2581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Hide real cursor everywhere; overlay follows mouse */
+        html, html *, body, body * { cursor: none !important; }
+        iframe, video, img, canvas, .paint-canvas,
+        .window, .window *, .desktop-folder, .desktop-folder *,
+        .graphics-preview-overlay, .graphics-preview-overlay *,
+        .graphics-grid, .graphics-grid *, .image-center, .image-center * {
+            cursor: none !important;
+        }
+        #cursor-overlay {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+            z-index: 200000000;
+            display: none;
+        }
+        #cursor-overlay img {
+            display: block;
+            height: 800px;
+            width: auto;
+            transform: scaleY(1.2);
+        }
+
+        body {
+            background: white;
+            width: 100%;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #adminHeader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        #adminHeader .nav-item,
+        #adminHeader h1 {
+            color: #0071e3;
+            text-decoration: underline;
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            margin: 0;
+            display: inline-block;
+            transform: scaleX(1.5);
+            transform-origin: left center;
+        }
+
+        .image-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .image-center img {
+            max-width: 60vw;
+            max-height: 60vh;
+            height: auto;
+            display: block;
+            -webkit-user-drag: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Desktop-style folder */
+        .desktop-folder {
+            position: absolute;
+            top: 70px;
+            left: 40px;
+            width: 80px;
+            cursor: move;
+            user-select: none;
+            z-index: 20;
+            text-align: center;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .desktop-folder-icon {
+            width: 64px;
+            height: 48px;
+            margin: 0 auto 6px;
+            position: relative;
+        }
+
+        /* Image-style desktop icon (used for vape icon) */
+        .desktop-folder-icon--image {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 6px;
+        }
+
+        .desktop-folder-icon--image::before,
+        .desktop-folder-icon--image::after {
+            content: none;
+        }
+
+        .desktop-folder-icon--image img {
+            width: 80px;
+            height: 80px;
+            display: block;
+            object-fit: contain;
+            image-rendering: pixelated;
+            margin: 0 auto;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+
+        /* back part (smaller, behind) */
+        .desktop-folder-icon::before {
+            content: "";
+            position: absolute;
+            top: -7px;
+            left: 6px;
+            width: 40px;
+            height: 26px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #9cc3ff, #5f99ff);
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
+            z-index: 0;
+        }
+
+        /* front part (bigger main folder body) */
+        .desktop-folder-icon::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 64px;
+            height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #8ab4ff, #4f8cff);
+            box-shadow:
+                0 4px 8px rgba(0, 0, 0, 0.18),
+                inset 0 -4px 6px rgba(0, 0, 0, 0.12);
+            z-index: 1;
+        }
+
+        .desktop-folder-label {
+            padding: 2px 4px;
+        }
+
+        /* Vapemodel window layout */
+        .vape-videos {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .vape-video-block {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .vape-video-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: #9ca3af;
+        }
+
+        .vape-video-frame {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .vape-video-frame iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            border-radius: 12px;
+        }
+
+        /* Window */
+        .window {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(420px, 80vw);
+            max-height: 80vh;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow:
+                0 22px 65px rgba(0, 0, 0, 0.35),
+                0 0 0 1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            z-index: 80;
+            display: none;
+        }
+
+        .window-body {
+            padding: 16px 18px 18px;
+            font-size: 14px;
+            color: #3a3a3c;
+            overflow-y: auto;
+            max-height: calc(80vh - 40px);
+        }
+
+        .graphics-section {
+            margin-bottom: 14px;
+        }
+
+        .graphics-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: #9ca3af;
+            margin-bottom: 6px;
+        }
+
+        .graphics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 8px;
+        }
+
+        .graphics-tile {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .graphics-tile img {
+            width: 100%;
+            border-radius: 6px;
+            display: block;
+        }
+
+        .graphics-tile iframe {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            border-radius: 6px;
+            border: none;
+            display: block;
+            pointer-events: none; /* clicks go to tile for expand */
+        }
+
+        .graphics-label {
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Fullscreen preview overlay */
+        .graphics-preview-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-out;
+        }
+
+        .graphics-preview-overlay.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .graphics-preview-inner {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 18px 18px 16px;
+            max-width: min(640px, 90vw);
+            max-height: 80vh;
+            box-shadow:
+                0 22px 65px rgba(0, 0, 0, 0.45),
+                0 0 0 1px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .graphics-preview-inner.is-image {
+            max-width: min(720px, 90vw);
+        }
+
+        .graphics-preview-inner.is-video {
+            max-width: min(420px, 70vw);
+        }
+
+        .graphics-preview-title-notch {
+            align-self: center;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #4b5563;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .graphics-preview-media {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .graphics-preview-media img {
+            max-width: 100%;
+            max-height: 60vh;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .graphics-preview-media iframe {
+            width: 100%;
+            max-height: 60vh;
+            border-radius: 10px;
+            display: block;
+            aspect-ratio: 9 / 16;
+        }
+
+
+        .window-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: linear-gradient(to bottom, #f5f5f7, #e5e5ea);
+            border-bottom: 1px solid #d2d2d7;
+            font-size: 12px;
+            color: #1d1d1f;
+            position: relative; /* allow centered title */
+            cursor: grab; /* use as drag notch */
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .window-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .window-dot--close {
+            background: #ff5f57;
+        }
+
+        /* Show a minus icon in the red button when hovering an open window */
+        .window-dot--close::before { content: none !important; }
+
+        .window:hover .window-dot--close::before { content: none !important; }
+
+        .window-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .release-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .release-card {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #f5f5f7;
+        }
+
+        .release-year-label {
+            margin-top: 4px;
+            margin-bottom: 2px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: #9ca3af;
+        }
+
+        .release-cover {
+            width: 42px;
+            height: 42px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #111827, #4b5563);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .release-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .release-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .release-title {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .release-type {
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .release-meta a {
+            font-size: 11px;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .release-meta a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 20px;
+            text-align: right;
+            font-size: 12px;
+            color: #4d4d4d; /* ~70% black */
+        }
+
+        /* Smokers break badge in bottom-left */
+        .smokers-break {
+            position: absolute;
+            bottom: 12px;
+            left: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            z-index: 25;
+        }
+
+        .smokers-break img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        .smokers-break-label {
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: lowercase;
+            color: #777;
+        }
+
+        /* Smoke overlay effect */
+        .smoke-overlay {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: linear-gradient(to top, rgba(80, 80, 80, 0.95), rgba(120, 120, 120, 0.7), rgba(200, 200, 200, 0.4), rgba(255, 255, 255, 0));
+            mix-blend-mode: screen;
+            opacity: 0;
+            transform: translateY(40%);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            z-index: 40;
+        }
+
+        .smoke-overlay.is-active {
+            opacity: 1;
+            transform: translateY(0);
+            animation: smoke-rise 10s ease-out forwards;
+        }
+
+        @keyframes smoke-rise {
+            0% {
+                opacity: 0;
+                transform: translateY(40%);
+            }
+            15% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            70% {
+                opacity: 1;
+                transform: translateY(-5%);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-15%);
+            }
+        }
+
+        /* Tiny red squares used for snail trails */
+        .jodi-square {
+            position: fixed;
+            width: 9px;
+            height: 9px;
+            background: #ff0000;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* Snail control: tiny red "error pixel" wandering near lower-right area */
+        .snail-control {
+            position: fixed;
+            width: 14px;
+            height: 14px;
+            z-index: 10000;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .snail-control-square {
+            width: 14px;
+            height: 14px;
+            background: #ff0000;
+        }
+
+        /* Wandering green waterdrop square */
+        .green-drop {
+            position: fixed;
+            width: 16px;
+            height: 16px;
+            background: #22c55e;
+            border-radius: 0;
+            z-index: 9500;
+            cursor: pointer;
+            transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+        }
+
+        .green-drop.is-hidden {
+            opacity: 0;
+            transform: scale(0.4);
+            pointer-events: none;
+        }
+
+        .green-drop-ripple {
+            position: fixed;
+            width: 24px;
+            height: 24px;
+            background: #22c55e;
+            pointer-events: none;
+            opacity: 0;
+            animation: greenPixelRipple 0.5s ease-out forwards;
+        }
+
+        @keyframes greenPixelRipple {
+            0% {
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* Pixel painting tool: blue pixel pyramid on the right that opens a full-page overlay */
+        .paint-tool {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            z-index: 9000;
+        }
+
+        .paint-pyramid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .paint-pyramid-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .paint-toggle,
+        .paint-button {
+            width: 20px;
+            height: 20px;
+            border-radius: 0;
+            border: 1px solid #0071e3;
+            background: #0071e3;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .paint-toggle:hover,
+        .paint-button:hover {
+            background: #2f8fff;
+        }
+
+        .start-overlay {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            z-index: 200000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .start-title {
+            font-family: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', system-ui, Helvetica, Arial, sans-serif;
+            font-weight: 600;
+            font-size: 60px;
+            line-height: 60px;
+            transform: scaleX(0.7);
+            transform-origin: center;
+            color: #1a1a1a;
+            transition: opacity 1.2s ease, transform 1.2s ease, color 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+        .start-title:hover { color: #bfbfbf; }
+        .start-curtain-left,
+        .start-curtain-right {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 50vw;
+            background: #ffffff;
+            transition: transform 2.0s ease-in-out;
+            z-index: 0;
+        }
+        .start-curtain-left { left: 0; transform: translateX(0); }
+        .start-curtain-right { right: 0; transform: translateX(0); }
+        .start-overlay.is-opening .start-curtain-left { transform: translateX(-100%); }
+        .start-overlay.is-opening .start-curtain-right { transform: translateX(100%); }
+        .start-overlay.is-opening .start-title { opacity: 0; transform: scaleX(0.68); }
+        .right-lines {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0;
+            pointer-events: auto;
+            z-index: 9;
+            transform: scaleX(0.7);
+            transform-origin: right center;
+        }
+        .right-line {
+            font-family: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', system-ui, Helvetica, Arial, sans-serif;
+            font-weight: 600;
+            font-size: 48px;
+            line-height: 48px;
+            letter-spacing: 0;
+            white-space: nowrap;
+            margin: 0;
+            padding: 0;
+            color: #1a1a1a;
+            transition: color 0.15s ease;
+        }
+        .right-line:hover { color: #7a7a7a; }
+        .paint-toggle[aria-pressed="true"] {
+            background: #004fa8;
+        }
+
+        .paint-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 8000;
+            display: none;
+        }
+
+        .paint-overlay.is-active {
+            display: block;
+        }
+        .paint-overlay.is-passive {
+            display: block;
+            pointer-events: none;
+        }
+        .paint-overlay.is-passive .paint-canvas {
+            cursor: default;
+        }
+
+        .paint-canvas {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            background: transparent;
+            image-rendering: pixelated;
+            cursor: crosshair;
+            display: block;
+        }
+
+        .paint-button:active {
+            background: #004fa8;
+        }
+
+        /* Screenshot preview modal */
+        .screenshot-preview {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .screenshot-preview.is-visible {
+            display: flex;
+        }
+        .screenshot-preview-inner {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            max-width: 95vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        .screenshot-preview-inner img {
+            max-width: 100%;
+            max-height: 70vh;
+            width: auto;
+            height: auto;
+            display: block;
+            image-rendering: pixelated;
+        }
+        .screenshot-preview-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .screenshot-preview-actions button {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid #d2d2d7;
+            background: #f5f5f7;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .screenshot-preview-actions button:hover {
+            background: #e5e5ea;
+        }
+        .screenshot-preview-actions .screenshot-download {
+            background: #0071e3;
+            color: #fff;
+            border-color: #0071e3;
+        }
+        .screenshot-preview-actions .screenshot-download:hover {
+            background: #005bb5;
+        }
+
+        #site-wrapper {
+            width: 100%;
+            height: 200vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.6s ease;
+            will-change: transform;
+        }
+        #site-wrapper.is-second {
+            transform: translateY(-100vh);
+        }
+        
+        #page-one {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #page-two {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .arrow {
+            position: absolute;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateX(-50%) scaleX(2) rotate(90deg);
+            font-size: 48px;
+            line-height: 1;
+            color: #1a1a1a;
+            cursor: pointer;
+            z-index: 2000001;
+            transition: color 0.2s ease, transform 0.2s ease;
+            display: none; /* Hidden by default */
+        }
+        
+        /* Show arrows only when site is active */
+        body.site-active .arrow {
+            display: block;
+        }
+
+        .arrow-down { bottom: 10px; }
+        .arrow-up { top: 10px; transform: translateX(-50%) scaleX(2) rotate(270deg); }
+        .arrow-down:hover { color: #7a7a7a; transform: translateX(-50%) scaleX(2.05) rotate(90deg); }
+        .arrow-up:hover { color: #7a7a7a; transform: translateX(-50%) scaleX(2.05) rotate(270deg); }
+        
+        .placeholder-text {
+            font-family: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', system-ui, Helvetica, Arial, sans-serif;
+            font-weight: 600;
+            font-size: 48px;
+            line-height: 48px;
+            letter-spacing: 0;
+            color: #1a1a1a;
+            transform: scaleX(0.7);
+            transform-origin: center;
+        }
+        
+        .vape-circle {
+            position: fixed;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9500;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.9);
+            box-shadow:
+                0 0 0 2px rgba(47, 167, 255, 0.55),
+                inset 0 0 40px rgba(168, 216, 255, 0.35);
+            background: radial-gradient(closest-side, rgba(168,216,255,0.25), transparent 65%);
+            transition: opacity 0.18s ease-out;
+        }
+        .vape-circle.is-active {
+            opacity: 1;
+            animation: vapeCirclePulse 1.6s ease-in-out infinite;
+        }
+        @keyframes vapeCirclePulse {
+            0%   { transform: translate(-50%, -50%) scale(0.9); }
+            50%  { transform: translate(-50%, -50%) scale(1.05); }
+            100% { transform: translate(-50%, -50%) scale(0.9); }
+        }
+        
+        .poster-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        .poster-bg img {
+            display: block;
+            max-width: 60vw;
+            max-height: 60vh;
+            height: auto;
+            border: none;
+            opacity: 1;
+            filter: saturate(0.9);
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-user-drag: none;
+            transition: transform 0.2s ease;
+        }
+        .poster-bg a:hover img {
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+        #smokersBreakImage {
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        /* Terminal-style popup - old Mac / classic Apple look, saturated */
+        .ad-popup {
+            position: fixed;
+            width: 272px;
+            background: #e8e6e0;
+            border: 1px solid #8e8e8e;
+            font-family: "Press Start 2P", "Chicago", "Geneva", "Courier New", monospace;
+            font-size: 8px;
+            color: #1a1a1a;
+            z-index: 9999;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            overflow: hidden;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+        .ad-popup .ad-popup-head {
+            background: linear-gradient(180deg, #3d7dd6 0%, #2d6dc4 50%, #2663b8 100%);
+            color: #fff;
+            padding: 6px 8px;
+            font-size: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1a4d8c;
+            cursor: move;
+            user-select: none;
+        }
+        .ad-popup .ad-popup-close {
+            background: #e74c3c;
+            color: #fff;
+            border: 1px solid #c0392b;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .ad-popup .ad-popup-close:hover {
+            background: #c0392b;
+        }
+        .ad-popup .ad-popup-body {
+            padding: 0;
+            min-height: 192px;
+            max-height: 304px;
+            overflow-y: auto;
+            background: #f5f4f0;
+        }
+        .ad-popup .ad-popup-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        .ad-popup .ad-popup-body::-webkit-scrollbar-track {
+            background: #e0ddd8;
+        }
+        .ad-popup .ad-popup-body::-webkit-scrollbar-thumb {
+            background: #b0ada5;
+            border: 1px solid #8e8e8e;
+            border-radius: 4px;
+        }
+        .ad-chat-log {
+            padding: 8px 10px;
+            font-size: 8px;
+            line-height: 2;
+            font-variant-numeric: tabular-nums;
+        }
+        .ad-chat-log .ad-chat-title {
+            color: #00884b;
+            margin-bottom: 8px;
+        }
+        .ad-chat-log .ad-chat-prompt {
+            color: #0066cc;
+            margin-bottom: 8px;
+        }
+        .ad-chat-log .ad-chat-msg {
+            margin-bottom: 6px;
+        }
+        .ad-chat-log .ad-chat-msg--you {
+            color: #00884b;
+        }
+        .ad-chat-log .ad-chat-line {
+            display: flex;
+            align-items: center;
+            margin-top: 6px;
+            min-height: 2em;
+        }
+        .ad-chat-log .ad-chat-line-prefix {
+            color: #00884b;
+            flex-shrink: 0;
+        }
+        .ad-chat-log .ad-chat-line input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #1a1a1a;
+            font-family: "Press Start 2P", "Chicago", "Geneva", "Courier New", monospace;
+            font-size: 8px;
+            padding: 0 0 0 4px;
+            min-width: 0;
+        }
+        .ad-chat-log .ad-chat-line input:focus {
+            outline: none;
+        }
+        .ad-chat-log .ad-chat-line input::placeholder {
+            color: #666;
+        }
+        .ad-chat-log .ad-chat-tracklist {
+            color: #00884b;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            padding-left: 8px;
+        }
+        .ad-chat-log .ad-chat-tracklist div {
+            margin: 2px 0;
+        }
+        
+        .pit-title {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            transform: none;
+            z-index: 50;
+            font-family: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', system-ui, Helvetica, Arial, sans-serif;
+            font-weight: 100;
+            font-size: 0;
+            letter-spacing: 0;
+            line-height: 1;
+            display: flex;
+            gap: 0;
+            color: #a8d8ff;
+            transition: transform 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+        }
+        .pit-letter {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+            font-weight: 400;
+            font-size: 28px;
+            letter-spacing: 0;
+            transition: transform 0.25s ease, color 0.15s ease, text-shadow 0.15s ease;
+        }
+        .pit-letter + .pit-letter { margin-left: 3px; }
+        .pit-letter:hover {
+            transform: scaleY(1.2);
+            color: #4aaeff;
+            text-shadow: none;
+        }
+        
+        
+        /* Vape icon slow zoom while hovering */
+        @keyframes vapeSlowZoom {
+            0%   { transform: scale(1.0); }
+            100% { transform: scale(1.25); }
+        }
+        .desktop-folder-icon--image img.is-zooming {
+            animation: vapeSlowZoom 6s linear infinite alternate;
+            transform-origin: center center;
+        }
+        @keyframes rotateSteps {
+            0%   { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #smokersBreakImage.is-rotating {
+            animation: rotateSteps 2s steps(8, end) infinite;
+            transform-origin: center center;
+        }
+
+        /* Vape Falling Smoker Effect */
+        .vape-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            overflow: visible;
+            z-index: 10;
+        }
+        .smokers-break:hover .vape-loader {
+            opacity: 1;
+        }
+        .vape-falling-icon {
+            position: absolute;
+            width: 40px;
+            height: auto;
+            left: 50%;
+            top: 50%;
+            margin-left: -20px;
+            margin-top: -20px;
+            opacity: 0;
+        }
+        .vape-falling-icon.icon-1 { animation: vapeFallOne 1s linear infinite; }
+        .vape-falling-icon.icon-2 { animation: vapeFallTwo 1s linear infinite; animation-delay: 0.3s; }
+        .vape-falling-icon.icon-3 { animation: vapeFallThree 1s linear infinite; animation-delay: 0.6s; }
+
+        @keyframes vapeFallOne {
+           0% { transform: scale(0.5) translateY(-200px); opacity: 0; }
+           25% { transform: scale(0.75) translateY(-100px); opacity: 1; }
+           50% { transform: scale(1) translateY(0px); opacity: 1; }
+           75% { transform: scale(0.5) translateY(50px); opacity: 1; }
+           100% { transform: scale(0) translateY(100px); opacity: 0; }
+        }
+        @keyframes vapeFallTwo {
+           0% { transform: scale(0.5) rotateZ(-10deg) translateY(-200px) translateX(-100px); opacity: 0; }
+           25% { transform: scale(1) rotateZ(-5deg) translateY(-100px) translateX(-50px); opacity: 1; }
+           50% { transform: scale(1) rotateZ(0deg) translateY(0px) translateX(-25px); opacity: 1; }
+           75% { transform: scale(0.5) rotateZ(5deg) translateY(50px) translateX(0px); opacity: 1; }
+           100% { transform: scale(0) rotateZ(10deg) translateY(100px) translateX(25px); opacity: 0; }
+        }
+        @keyframes vapeFallThree {
+           0% { transform: scale(0.5) rotateZ(10deg) translateY(-200px) translateX(100px); opacity: 0; }
+           25% { transform: scale(1) rotateZ(5deg) translateY(-100px) translateX(50px); opacity: 1; }
+           50% { transform: scale(1) rotateZ(0deg) translateY(0px) translateX(25px); opacity: 1; }
+           75% { transform: scale(0.5) rotateZ(-5deg) translateY(50px) translateX(0px); opacity: 1; }
+           100% { transform: scale(0) rotateZ(-10deg) translateY(100px) translateX(-25px); opacity: 0; }
+        }
+
+        .start-title.is-animating {
+            animation: titleSequence 3s ease-in-out forwards;
+        }
+        @keyframes titleSequence {
+            0% { transform: translate(-50%, -50%) scaleX(0.7); opacity: 1; color: #1a1a1a; }
+            30% { transform: translate(-50%, -50%) scale(20); opacity: 1; color: #0071e3; }
+            60% { transform: translate(-50%, -50%) scaleX(0.7); opacity: 1; color: #0071e3; }
+            100% { transform: translate(-50%, -50%) scale(0); opacity: 0; color: #0071e3; }
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor-overlay" aria-hidden="true"><img id="cursor-img" src="https://raw.githubusercontent.com/git34r/hello-world/main/Content/pointer/p1.png" alt="" width="800" height="800"></div>
+    
+    <div id="site-wrapper">
+        <div id="page-one">
+    
+    <div id="adminHeader">
+        <h1>admin</h1>
+    </div>
+
+    <div class="image-center">
+        <img src="https://raw.githubusercontent.com/git34r/hello-world/main/port/admin.png" alt="admin" />
+    </div>
+    
+
+    <div class="desktop-folder" id="folderAdmin">
+        <div class="desktop-folder-icon"></div>
+        <div class="desktop-folder-label">Admin</div>
+    </div>
+
+    <div class="desktop-folder" id="folderMusic" style="top: 170px; left: 40px;">
+        <div class="desktop-folder-icon"></div>
+        <div class="desktop-folder-label">Music</div>
+    </div>
+
+    <div class="desktop-folder" id="folderGraphics" style="top: 270px; left: 40px;">
+        <div class="desktop-folder-icon"></div>
+        <div class="desktop-folder-label">Graphics</div>
+    </div>
+
+    <div class="desktop-folder" id="folderVape" style="top: 370px; left: 40px;" data-url="https://bonpit.com/vapemodel">
+        <div class="desktop-folder-icon--image">
+            <img src="https://raw.githubusercontent.com/git34r/hello-world/main/port/vapeicon.gif" alt="Vape icon" draggable="false">
+        </div>
+        <div class="desktop-folder-label">vapemodel</div>
+    </div>
+
+    <div class="window" id="windowAdmin">
+        <div class="window-header">
+            <div class="window-dot window-dot--close" id="closeAdmin"></div>
+            <div class="window-title">Admin Folder</div>
+        </div>
+        <div class="window-body">
+            <div style="font-size: 13px; line-height: 1.5; color: #111; display: flex; justify-content: space-between; gap: 16px;">
+                <div>
+                    <div>name: pit</div>
+                    <div>age: 23</div>
+                    <div>email: admin@bonpit.com</div>
+                </div>
+                <div style="text-align: right; white-space: nowrap;">
+                    <div style="margin-top: 4px;">
+                        instagram:
+                        <a href="https://www.instagram.com/bonpit_" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">bonpit_</a>
+                    </div>
+                    <div>
+                        soundcloud:
+                        <a href="https://soundcloud.com/bbonpit" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">bbonpit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="window" id="windowMusic">
+        <div class="window-header">
+            <div class="window-dot window-dot--close" id="closeMusic"></div>
+            <div class="window-title">Discography</div>
+        </div>
+        <div class="window-body">
+            <div class="release-list">
+                <div class="release-year-label">2025</div>
+
+                <!-- Newest 2025 release first -->
+                <div class="release-card">
+                    <div class="release-cover">
+                        <img src="covers/igvapemodels.jpg" alt="Igvapemodels cover">
+                    </div>
+                    <div class="release-meta">
+                        <div class="release-title">Igvapemodels</div>
+                        <div class="release-type">Track · Bonpit</div>
+                        <a href="https://git34r.github.io/hello-world/igvapemodels.html" target="_blank" rel="noopener noreferrer">Buy / Download</a>
+                    </div>
+                </div>
+
+                <div class="release-card">
+                    <div class="release-cover">
+                        <img src="covers/lost-in-time.jpg" alt="Lost In Time cover">
+                    </div>
+                    <div class="release-meta">
+                        <div class="release-title">Lost In Time</div>
+                        <div class="release-type">Track · Bonpit</div>
+                        <a href="https://git34r.github.io/hello-world/lostintime.html" target="_blank" rel="noopener noreferrer">Buy / Download</a>
+                    </div>
+                </div>
+
+                <div class="release-card">
+                    <div class="release-cover">
+                        <img src="covers/me-me-me.jpg" alt="me, me, me cover">
+                    </div>
+                    <div class="release-meta">
+                        <div class="release-title">me, me, me</div>
+                        <div class="release-type">Album · Bonpit</div>
+                        <a href="https://bonpit.bandcamp.com/album/me-me-me" target="_blank" rel="noopener noreferrer">Open on Bandcamp</a>
+                    </div>
+                </div>
+
+                <div class="release-year-label">2024</div>
+
+                <!-- Latest 2024 tracks from SoundCloud on top -->
+                <div class="release-card">
+                    <div class="release-cover">
+                        <img src="covers/sadsadsad.jpg" alt="SadSadSad cover">
+                    </div>
+                    <div class="release-meta">
+                        <div class="release-title">SadSadSad</div>
+                        <div class="release-type">Track · Bonpit</div>
+                        <a href="https://soundcloud.com/bbonpit/sadsadsad" target="_blank" rel="noopener noreferrer">Open on SoundCloud</a>
+                    </div>
+                </div>
+
+                <div class="release-card">
+                    <div class="release-cover">
+                        <img src="covers/4ever.jpg" alt="4Ever cover">
+                    </div>
+                    <div class="release-meta">
+                        <div class="release-title">4Ever</div>
+                        <div class="release-type">Track · Bonpit</div>
+                        <a href="https://bonpit.bandcamp.com/track/4ever" target="_blank" rel="noopener noreferrer">Open on Bandcamp</a>
+                    </div>
+                </div>
+
+                <div class="release-card">
+                    <div class="release-cover">
+                        <img src="covers/papi.jpg" alt="Papi cover">
+                    </div>
+                    <div class="release-meta">
+                        <div class="release-title">Papi</div>
+                        <div class="release-type">Track · Bonpit</div>
+                        <a href="https://git34r.github.io/hello-world/papi.html" target="_blank" rel="noopener noreferrer">Buy / Download</a>
+                    </div>
+                </div>
+
+                <div class="release-card">
+                    <div class="release-cover">
+                        <img src="covers/hipshots.jpg" alt="HIPSHOTS cover">
+                    </div>
+                    <div class="release-meta">
+                        <div class="release-title">HIPSHOTS</div>
+                        <div class="release-type">Album · Bonpit</div>
+                        <a href="https://bonpit.bandcamp.com/album/hipshots" target="_blank" rel="noopener noreferrer">Open on Bandcamp</a>
+                    </div>
+                </div>
+
+                <div class="release-year-label">2023</div>
+
+                <div class="release-card">
+                    <div class="release-cover">
+                        <img src="covers/onetwothreefour.jpg" alt="Onetwothreefour cover">
+                    </div>
+                    <div class="release-meta">
+                        <div class="release-title">Onetwothreefour</div>
+                        <div class="release-type">Track · Bonpit</div>
+                        <a href="https://soundcloud.com/bbonpit/onetwothreefour" target="_blank" rel="noopener noreferrer">Open on SoundCloud</a>
+                    </div>
+                </div>
+
+                <div class="release-card">
+                    <div class="release-cover">
+                        <img src="covers/lev-me.jpg" alt="lëv me cover">
+                    </div>
+                    <div class="release-meta">
+                        <div class="release-title">lëv me</div>
+                        <div class="release-type">Track · Bonpit</div>
+                        <a href="https://bonpit.bandcamp.com/track/l-v-me" target="_blank" rel="noopener noreferrer">Open on Bandcamp</a>
+                    </div>
+                </div>
+
+                <div class="release-card">
+                    <div class="release-cover">
+                        <img src="covers/beau.jpg" alt="'*Beau*' cover">
+                    </div>
+                    <div class="release-meta">
+                        <div class="release-title">'*Beau*'</div>
+                        <div class="release-type">Album · Bonpit</div>
+                        <a href="https://bonpit.bandcamp.com/album/beau-2" target="_blank" rel="noopener noreferrer">Open on Bandcamp</a>
+                    </div>
+                </div>
+
+                <div class="release-card">
+                    <div class="release-cover">
+                        <img src="covers/1-5-fifteen-edit.jpg" alt="1-5 (Fifteen Edit) cover">
+                    </div>
+                    <div class="release-meta">
+                        <div class="release-title">1-5 (Fifteen Edit)</div>
+                        <div class="release-type">Track · Bonpit</div>
+                        <a href="https://bonpit.bandcamp.com/track/1-5-fifteen-edit" target="_blank" rel="noopener noreferrer">Open on Bandcamp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="window" id="windowGraphics">
+        <div class="window-header">
+            <div class="window-dot window-dot--close" id="closeGraphics"></div>
+            <div class="window-title">Graphics Folder</div>
+        </div>
+        <div class="window-body">
+            <div class="graphics-section">
+                <div class="graphics-section-title">cover</div>
+                <div id="graphicsGridCovers" class="graphics-grid"></div>
+            </div>
+            <div class="graphics-section">
+                <div class="graphics-section-title">videos</div>
+                <div id="graphicsGridVideos" class="graphics-grid"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="graphics-preview-overlay" id="graphicsPreview">
+        <div class="graphics-preview-inner" id="graphicsPreviewInner">
+            <div class="graphics-preview-title-notch">
+                <span id="graphicsPreviewTitle"></span>
+            </div>
+            <div class="graphics-preview-media" id="graphicsPreviewMedia"></div>
+        </div>
+    </div>
+
+    <div class="smokers-break">
+        <img src="https://raw.githubusercontent.com/git34r/hello-world/main/port/smokerbreak.gif" alt="Smokers break" id="smokersBreakImage">
+        <span class="smokers-break-label">smokers break</span>
+        <div class="vape-loader">
+            <img src="https://raw.githubusercontent.com/git34r/hello-world/main/port/smokerbreak.gif" class="vape-falling-icon icon-1" alt="">
+            <img src="https://raw.githubusercontent.com/git34r/hello-world/main/port/smokerbreak.gif" class="vape-falling-icon icon-2" alt="">
+            <img src="https://raw.githubusercontent.com/git34r/hello-world/main/port/smokerbreak.gif" class="vape-falling-icon icon-3" alt="">
+        </div>
+    </div>
+
+    <div class="smoke-overlay" id="smokeOverlay"></div>
+
+    <div class="snail-control" id="snailControl">
+        <div class="snail-control-square"></div>
+    </div>
+
+    <div class="green-drop" id="greenDrop"></div>
+
+    <div class="paint-tool">
+        <div class="paint-pyramid">
+            <div class="paint-pyramid-row">
+                <button
+                    type="button"
+                    class="paint-toggle"
+                    id="paintToggle"
+                    aria-pressed="false"
+                    title="Toggle pixel paint"
+                ></button>
+                <button type="button" class="paint-button" id="paintScreenshot" aria-label="Screenshot" title="Save screenshot"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="paint-overlay" id="paintOverlay">
+        <canvas id="paintCanvas" class="paint-canvas" width="160" height="90"></canvas>
+    </div>
+
+    <div class="footer">
+        ©2026 Pit
+    </div>
+
+    <div class="screenshot-preview" id="screenshotPreview">
+        <div class="screenshot-preview-inner">
+            <img id="screenshotPreviewImg" alt="Screenshot preview" />
+            <div class="screenshot-preview-actions">
+                <button type="button" class="screenshot-download" id="screenshotDownloadBtn">Download</button>
+                <button type="button" id="screenshotCloseBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="vape-circle" id="vapeCircle" aria-hidden="true"></div>
+    <div class="poster-bg">
+        <a href="https://soundcloud.com/bbonpit/sets/source" target="_blank">
+            <img src="https://raw.githubusercontent.com/git34r/hello-world/main/Content/xsource%20out%20now.png" alt="xsource out now">
+        </a>
+    </div>
+
+        <div class="arrow arrow-down" id="arrowDown">&gt;</div>
+    </div> <!-- Close page-one -->
+    
+    <div id="page-two">
+        <div class="arrow arrow-up" id="arrowUp">&gt;</div>
+        <div class="right-lines" id="rightLines">
+            <div class="right-line">Internet Entrepreneur</div>
+            <div class="right-line">Graphical Genius</div>
+            <div class="right-line">Mixed Media Wizard</div>
+            <div class="right-line">DJST DJ</div>
+            <div class="right-line">Producing ERA 2018</div>
+            <div class="right-line">Living since 2002</div>
+            <div class="right-line">Drawing (Global Elite)</div>
+        </div>
+        <div class="placeholder-text">placeholder</div>
+    </div>
+    </div> <!-- Close site-wrapper -->
+    <div class="wall-overlay" id="wallOverlay" style="position: fixed; inset: 0; z-index: 150000; background: transparent; overflow: hidden;">
+        <img src="Content/startpage/wallup.png" style="width: 130vw; height: auto; min-height: 100vh; display: block; position: absolute; top: -5vh; left: 50%; margin-left: -65vw; padding: 0;" id="wallImage">
+    </div>
+    <div class="start-overlay" id="startOverlay">
+        <div class="start-curtain-left" id="startCurtainLeft"></div>
+        <div class="start-curtain-right" id="startCurtainRight"></div>
+        <div class="start-title" id="startTitle">bon pit</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        (function () {
+            var overlay = document.getElementById('cursor-overlay');
+            var img = document.getElementById('cursor-img');
+            var tipX = 140;
+            var tipY = 60;
+            
+            function isStartScreen() {
+                var start = document.getElementById('startOverlay');
+                return start && start.parentNode;
+            }
+
+            function moveCursor(e) {
+                overlay.style.display = 'block';
+                var x = e.clientX;
+                var y = e.clientY;
+                
+                if (isStartScreen()) {
+                    var keyUrl = 'https://raw.githubusercontent.com/git34r/hello-world/main/Content/startpage/key.gif';
+                    if (img.src.indexOf('key.gif') === -1) {
+                        img.src = keyUrl;
+                        img.style.width = '100px';
+                        img.style.height = 'auto';
+                    }
+                    
+                    // Center the key on cursor
+                    overlay.style.left = (x - 50) + 'px';
+                    overlay.style.top = (y - 50) + 'px';
+                    
+                    var centerX = window.innerWidth / 2;
+                    var centerY = window.innerHeight / 2;
+                    var dx = centerX - x;
+                    var dy = centerY - y;
+                    var angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                    var rotation = angle + 90;
+                    var snapped = Math.round(rotation / 45) * 45;
+                    img.style.transform = 'rotate(' + snapped + 'deg)';
+                } else {
+                    // Standard offset for p1
+                    overlay.style.left = (x - tipX - 40) + 'px';
+                    overlay.style.top = (y - tipY + 90) + 'px';
+                    
+                    var p1 = 'https://raw.githubusercontent.com/git34r/hello-world/main/Content/pointer/p1.png';
+                    // Check if we need to revert from key.gif
+                    if (img.src.indexOf('key.gif') !== -1) {
+                        img.src = p1;
+                    }
+                    
+                    // Always clear inline styles to let CSS (width: auto, height: 800px, scaleY) apply
+                    if (img.style.width) img.style.width = '';
+                    if (img.style.height) img.style.height = '';
+                    if (img.style.transform) img.style.transform = '';
+                }
+            }
+            document.addEventListener('mousemove', moveCursor);
+            document.addEventListener('mousedown', function () { 
+                if (!isStartScreen() && img) img.src = 'https://raw.githubusercontent.com/git34r/hello-world/main/Content/pointer/p2.png'; 
+            });
+            document.addEventListener('mouseup', function () { 
+                if (!isStartScreen() && img) img.src = 'https://raw.githubusercontent.com/git34r/hello-world/main/Content/pointer/p1.png'; 
+            });
+            document.addEventListener('mouseleave', function () { 
+                if (!isStartScreen() && img) img.src = 'https://raw.githubusercontent.com/git34r/hello-world/main/Content/pointer/p1.png'; 
+            });
+
+            function makeFolderInteractive(folderId, windowId, closeId) {
+                const folder = document.getElementById(folderId);
+                const win = document.getElementById(windowId);
+                const closeBtn = document.getElementById(closeId);
+
+                if (!folder || !win || !closeBtn) return;
+
+                let isDragging = false;
+                let offsetX = 0;
+                let offsetY = 0;
+                let hasDragged = false;
+
+                folder.addEventListener('mousedown', (e) => {
+                    if (e.button !== 0) return;
+                    isDragging = true;
+                    const rect = folder.getBoundingClientRect();
+                    offsetX = e.clientX - rect.left;
+                    offsetY = e.clientY - rect.top;
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    const x = e.clientX - offsetX;
+                    const y = e.clientY - offsetY;
+                    folder.style.left = x + 'px';
+                    folder.style.top = y + 'px';
+                    hasDragged = true;
+                });
+
+                window.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+
+                folder.addEventListener('click', () => {
+                    if (hasDragged) { hasDragged = false; return; }
+                    win.style.display = 'block';
+                });
+
+                closeBtn.addEventListener('click', () => {
+                    win.style.display = 'none';
+                });
+            }
+
+            var pitLetters = document.querySelectorAll('.pit-letter');
+            var pitAudio = {
+                'p': new Audio('https://raw.githubusercontent.com/git34r/hello-world/main/Content/pit/P_r.mp3'),
+                'i': new Audio('https://raw.githubusercontent.com/git34r/hello-world/main/Content/pit/I_r.mp3'),
+                't': new Audio('https://raw.githubusercontent.com/git34r/hello-world/main/Content/pit/T_r.mp3')
+            };
+            Object.keys(pitAudio).forEach(function (k) {
+                var a = pitAudio[k];
+                a.preload = 'auto';
+                a.crossOrigin = 'anonymous';
+                a.volume = 1.0;
+            });
+            var pitCooldown = { p: 0, i: 0, t: 0 };
+            var PIT_COOLDOWN_MS = 450;
+            pitLetters.forEach(function (el) {
+                el.addEventListener('mouseenter', function () {
+                    var ch = (el.getAttribute('data-letter') || el.textContent || '').trim().toLowerCase();
+                    var a = pitAudio[ch];
+                    if (!a) return;
+                    var now = Date.now();
+                    if (pitCooldown[ch] && (now - pitCooldown[ch] < PIT_COOLDOWN_MS)) return;
+                    pitCooldown[ch] = now;
+                    try {
+                        a.currentTime = 0;
+                        a.play().catch(function () {});
+                    } catch (e) {}
+                });
+            });
+            
+            var vapeFolder = document.getElementById('folderVape');
+            var vapeImg = vapeFolder ? vapeFolder.querySelector('.desktop-folder-icon--image img') : null;
+            if (vapeFolder && vapeImg) {
+                vapeFolder.addEventListener('mouseenter', function () {
+                    vapeImg.classList.add('is-zooming');
+                });
+                vapeFolder.addEventListener('mouseleave', function () {
+                    vapeImg.classList.remove('is-zooming');
+                });
+            }
+            var smokerImg = document.getElementById('smokersBreakImage');
+            if (smokerImg) {
+                smokerImg.addEventListener('mouseenter', function () {
+                    smokerImg.classList.add('is-rotating');
+                });
+                smokerImg.addEventListener('mouseleave', function () {
+                    smokerImg.classList.remove('is-rotating');
+                });
+            }
+            
+
+            function makeWindowDraggable(windowId) {
+                const win = document.getElementById(windowId);
+                if (!win) return;
+
+                const header = win.querySelector('.window-header');
+                if (!header) return;
+
+                let isDraggingWin = false;
+                let offsetX = 0;
+                let offsetY = 0;
+
+                header.addEventListener('mousedown', (e) => {
+                    if (e.button !== 0) return;
+                    isDraggingWin = true;
+                    header.style.cursor = 'grabbing';
+
+                    const rect = win.getBoundingClientRect();
+                    offsetX = e.clientX - rect.left;
+                    offsetY = e.clientY - rect.top;
+
+                    // Switch from centered transform to explicit position so dragging feels natural
+                    win.style.transform = 'none';
+                    win.style.left = rect.left + 'px';
+                    win.style.top = rect.top + 'px';
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDraggingWin) return;
+                    e.preventDefault();
+                    const x = e.clientX - offsetX;
+                    const y = e.clientY - offsetY;
+                    win.style.left = x + 'px';
+                    win.style.top = y + 'px';
+                });
+
+                window.addEventListener('mouseup', () => {
+                    if (!isDraggingWin) return;
+                    isDraggingWin = false;
+                    header.style.cursor = 'grab';
+                });
+            }
+
+            makeFolderInteractive('folderAdmin', 'windowAdmin', 'closeAdmin');
+            makeFolderInteractive('folderMusic', 'windowMusic', 'closeMusic');
+            makeFolderInteractive('folderGraphics', 'windowGraphics', 'closeGraphics');
+
+            // Close windows when clicking outside
+            document.addEventListener('mousedown', function(e) {
+                if (e.target.closest('.window')) return;
+                if (e.target.closest('.desktop-folder')) return;
+                document.querySelectorAll('.window').forEach(function(w) {
+                    w.style.display = 'none';
+                });
+            });
+
+            // Draggable external-link folder for Vapemodel
+            (function initVapeFolderLink() {
+                const folder = document.getElementById('folderVape');
+                if (!folder) return;
+
+                const url = folder.getAttribute('data-url');
+                if (!url) return;
+
+                let isDragging = false;
+                let offsetX = 0;
+                let offsetY = 0;
+
+                folder.addEventListener('mousedown', (e) => {
+                    if (e.button !== 0) return;
+                    isDragging = true;
+                    const rect = folder.getBoundingClientRect();
+                    offsetX = e.clientX - rect.left;
+                    offsetY = e.clientY - rect.top;
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    const x = e.clientX - offsetX;
+                    const y = e.clientY - offsetY;
+                    folder.style.left = x + 'px';
+                    folder.style.top = y + 'px';
+                });
+
+                window.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+
+                folder.addEventListener('dblclick', () => {
+                    window.open(url, '_blank');
+                });
+            })();
+
+            makeWindowDraggable('windowAdmin');
+            makeWindowDraggable('windowMusic');
+            makeWindowDraggable('windowGraphics');
+
+            // Smokers break click → temporary smoke effect (10s)
+            const smokersImg = document.getElementById('smokersBreakImage');
+            const smokeOverlay = document.getElementById('smokeOverlay');
+            if (smokersImg && smokeOverlay) {
+                smokersImg.style.cursor = 'pointer';
+                smokersImg.addEventListener('click', () => {
+                    // restart animation if it's already running
+                    smokeOverlay.classList.remove('is-active');
+                    // force reflow to restart animation
+                    void smokeOverlay.offsetWidth;
+                    smokeOverlay.classList.add('is-active');
+
+                    // ensure it’s fully removed after 10 seconds
+                    setTimeout(() => {
+                        smokeOverlay.classList.remove('is-active');
+                    }, 10000);
+                });
+            }
+
+            // Graphics folder: load images + labels from GitHub "port" folder (no admin/overlay)
+            const graphicsGridCovers = document.getElementById('graphicsGridCovers');
+            const graphicsGridVideos = document.getElementById('graphicsGridVideos');
+            const previewOverlay = document.getElementById('graphicsPreview');
+            const previewInner = document.getElementById('graphicsPreviewInner');
+            const previewTitle = document.getElementById('graphicsPreviewTitle');
+            const previewMedia = document.getElementById('graphicsPreviewMedia');
+
+            if (previewOverlay) {
+                previewOverlay.addEventListener('click', () => {
+                    previewOverlay.classList.remove('is-visible');
+                    if (previewMedia) {
+                        previewMedia.innerHTML = '';
+                    }
+                    if (previewInner) {
+                        previewInner.classList.remove('is-image', 'is-video');
+                    }
+                });
+            }
+
+            if (graphicsGridCovers && graphicsGridVideos && previewOverlay && previewInner && previewTitle && previewMedia) {
+                const githubRepo = 'https://raw.githubusercontent.com/git34r/hello-world/main/port';
+                const githubApi = 'https://api.github.com/repos/git34r/hello-world/contents/port';
+
+                const vimeoVideos = [
+                    { id: '1135590687', title: 'AW_EVENT01' },
+                    { id: '1135590630', title: 'AW_EVENT02' },
+                    { id: '1135590890', title: 'ONNYCHO_PACKSNRACK' },
+                    { id: '1135590836', title: 'OBS_SINGLES' },
+                    { id: '1135590791', title: 'OBSVA4' },
+                    { id: '1135590728', title: 'OBSVA5' }
+                ];
+
+                function mapImageName(originalName) {
+                    const nameMap = {
+                        'bonpitdallaniel': 'BONPIT&DALLANIEL_IMB01',
+                        'coveremilioeuphrat': 'EMILIOALBERT&EUPHRAT_MOURINGROUTINES',
+                        'dallanielgrooveidcover': 'DALLANIEL_GROOVEID',
+                        'dallaniel_grooveid': 'DALLANIEL_GROOVEID',
+                        'dallanielukg': 'DALLANIEL_<3BEAT',
+                        'emilioalbertmodalities': 'EMILIOALBERT_MODALITIES',
+                        'modalities': 'EMILIOALBERT_MODALITIES',
+                        'emilioalbert_modalities': 'EMILIOALBERT_MODALITIES',
+                        'syndicate allstars': 'SYNDIKAET_ALLSTARS',
+                        'syndicateallstars': 'SYNDIKAET_ALLSTARS',
+                        'syndikaet': 'SYNDIKAET_ALLSTARS',
+                        'syndikaet_allstars': 'SYNDIKAET_ALLSTARS',
+                        'allstars': 'SYNDIKAET_ALLSTARS',
+                        'individuation': 'DALLANIEL_INDIVIDUATION'
+                    };
+
+                    const nameWithoutExt = originalName.replace(/\.[^/.]+$/, '').toLowerCase();
+                    const nameWithExt = originalName.toLowerCase();
+
+                    let mapped = nameMap[nameWithoutExt] || nameMap[nameWithExt];
+
+                    if (!mapped) {
+                        const lowerName = nameWithoutExt;
+                        if (lowerName.includes('modalities')) {
+                            mapped = 'EMILIOALBERT_MODALITIES';
+                        } else if (lowerName.includes('allstars') || lowerName.includes('syndikaet') || lowerName.includes('syndicate')) {
+                            mapped = 'SYNDIKAET_ALLSTARS';
+                        } else if (lowerName.includes('individuation')) {
+                            mapped = 'DALLANIEL_INDIVIDUATION';
+                        }
+                    }
+
+                    return mapped || originalName.toUpperCase();
+                }
+
+                function formatLabel(name) {
+                    return mapImageName(name);
+                }
+
+                function attachExpandBehavior(tile, descriptor) {
+                    tile.addEventListener('click', () => {
+                        // build fullscreen preview
+                        previewMedia.innerHTML = '';
+
+                        if (previewInner) {
+                            previewInner.classList.remove('is-image', 'is-video');
+                            previewInner.classList.add(descriptor.type === 'video' ? 'is-video' : 'is-image');
+                        }
+
+                        if (descriptor.type === 'video') {
+                            const iframe = document.createElement('iframe');
+                            iframe.src = descriptor.src;
+                            iframe.title = descriptor.title;
+                            iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+                            iframe.setAttribute('allowfullscreen', '');
+                            previewMedia.appendChild(iframe);
+                        } else {
+                            const img = new Image();
+                            img.src = descriptor.src;
+                            img.alt = descriptor.title;
+                            previewMedia.appendChild(img);
+                        }
+
+                        previewTitle.textContent = descriptor.title;
+                        previewOverlay.classList.add('is-visible');
+                    });
+                }
+
+                function createGraphicsImageTile(item) {
+                    const tile = document.createElement('div');
+                    tile.className = 'graphics-tile';
+
+                    const img = new Image();
+                    img.src = item.path;
+                    img.alt = item.label;
+                    img.loading = 'lazy';
+
+                    const labelText = formatLabel(item.label);
+
+                    const label = document.createElement('span');
+                    label.className = 'graphics-label';
+                    label.textContent = labelText;
+
+                    tile.appendChild(img);
+                    tile.appendChild(label);
+
+                    attachExpandBehavior(tile, {
+                        type: 'image',
+                        src: item.path,
+                        title: labelText
+                    });
+
+                    return tile;
+                }
+
+                function createGraphicsVideoTile(video) {
+                    const tile = document.createElement('div');
+                    tile.className = 'graphics-tile';
+
+                    const iframe = document.createElement('iframe');
+                    iframe.src = `https://player.vimeo.com/video/${video.id}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1`;
+                    iframe.title = video.title;
+                    iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+                    iframe.setAttribute('allowfullscreen', '');
+
+                    const label = document.createElement('span');
+                    label.className = 'graphics-label';
+                    label.textContent = video.title;
+
+                    tile.appendChild(iframe);
+                    tile.appendChild(label);
+
+                    attachExpandBehavior(tile, {
+                        type: 'video',
+                        src: `https://player.vimeo.com/video/${video.id}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1`,
+                        title: video.title
+                    });
+
+                    return tile;
+                }
+
+                async function loadGraphics() {
+                    try {
+                        const response = await fetch(githubApi);
+                        if (!response.ok) throw new Error('image listing failed');
+                        const files = await response.json();
+
+                        const items = files
+                            .filter(file => {
+                                if (file.type !== 'file') return false;
+                                if (!/\.(jpg|jpeg|png|gif|webp)$/i.test(file.name)) return false;
+
+                                const lower = file.name.toLowerCase();
+                                const excludedExact = [
+                                    'logo.png',
+                                    'admin.png',
+                                    'admin2.png',
+                                    'ytoverlay_stream.png',
+                                    'vapeicon.gif',
+                                    'smokerbreak.gif'
+                                ];
+
+                                if (excludedExact.includes(lower)) return false;
+                                if (lower.includes('admin') || lower.includes('overlay') || lower.includes('stream')) {
+                                    return false;
+                                }
+
+                                return true;
+                            })
+                            .sort((a, b) => a.name.localeCompare(b.name))
+                            .map(file => ({
+                                label: file.name,
+                                path: `${githubRepo}/${file.name}`
+                            }));
+
+                        items.forEach(item => {
+                            const tile = createGraphicsImageTile(item);
+                            graphicsGridCovers.appendChild(tile);
+                        });
+
+                        // append video tiles into videos grid
+                        vimeoVideos.forEach(video => {
+                            const tile = createGraphicsVideoTile(video);
+                            graphicsGridVideos.appendChild(tile);
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+
+                loadGraphics();
+            }
+
+            // Snail-building pattern controller.
+            // Start/stop is controlled by the tiny red square in the top-right.
+            const snailController = (function snailBuilderController() {
+                const STEP_DELAY = 70; // ms between segments
+                const MIN_SEGMENTS = 18;
+                const MAX_SEGMENTS = 42;
+                const TURN_PER_STEP = 0.12; // how fast the spiral curves
+                const RADIUS_STEP = 4; // distance between segments
+
+                let running = false;
+                let pendingTimeouts = [];
+
+                function schedule(fn, delay) {
+                    const id = setTimeout(() => {
+                        pendingTimeouts = pendingTimeouts.filter(t => t !== id);
+                        if (!running) return;
+                        fn();
+                    }, delay);
+                    pendingTimeouts.push(id);
+                }
+
+                function clearAllTimeouts() {
+                    pendingTimeouts.forEach(id => clearTimeout(id));
+                    pendingTimeouts = [];
+                }
+
+                function randomStart() {
+                    const margin = 80;
+                    const vw = window.innerWidth;
+                    const vh = window.innerHeight;
+                    const x = margin + Math.random() * Math.max(10, vw - margin * 2);
+                    const y = margin + Math.random() * Math.max(10, vh - margin * 2);
+                    return { x, y };
+                }
+
+                function makeSegment(x, y) {
+                    const s = document.createElement('div');
+                    s.className = 'jodi-square';
+                    s.style.left = x + 'px';
+                    s.style.top = y + 'px';
+                    document.body.appendChild(s);
+
+                    // snail squares live a bit longer so trail lingers while running
+                    schedule(() => {
+                        if (s.parentNode) {
+                            s.parentNode.removeChild(s);
+                        }
+                    }, 2200 + Math.random() * 1800);
+                }
+
+                function drawSnailOnce() {
+                    const { x: cx, y: cy } = randomStart();
+                    const baseAngle = Math.random() * Math.PI * 2;
+                    const segments = Math.floor(
+                        MIN_SEGMENTS + Math.random() * (MAX_SEGMENTS - MIN_SEGMENTS)
+                    );
+
+                    // primary spiral
+                    for (let i = 0; i < segments; i++) {
+                        const angle = baseAngle + i * TURN_PER_STEP;
+                        const r = i * RADIUS_STEP;
+                        const x = cx + Math.cos(angle) * r;
+                        const y = cy + Math.sin(angle) * r;
+
+                        schedule(() => {
+                            makeSegment(x, y);
+                        }, i * STEP_DELAY);
+                    }
+
+                    // secondary correlated spiral (mirrored / rotated)
+                    const offsetAngle = baseAngle + Math.PI / 2;
+                    for (let i = 0; i < segments; i++) {
+                        const angle = offsetAngle - i * TURN_PER_STEP;
+                        const r = i * (RADIUS_STEP * 0.85);
+                        const x = cx + Math.cos(angle) * r;
+                        const y = cy + Math.sin(angle) * r;
+
+                        schedule(() => {
+                            makeSegment(x, y);
+                        }, i * (STEP_DELAY * 0.9));
+                    }
+                }
+
+                function loop() {
+                    if (!running) return;
+                    drawSnailOnce();
+                    const pause = 1200 + Math.random() * 3600;
+                    schedule(loop, pause);
+                }
+
+                function runSquaresOut() {
+                    const squares = document.querySelectorAll('.jodi-square');
+                    const vw = window.innerWidth;
+                    const vh = window.innerHeight;
+
+                    squares.forEach(sq => {
+                        const rect = sq.getBoundingClientRect();
+                        const cx = rect.left + rect.width / 2;
+                        const cy = rect.top + rect.height / 2;
+
+                        const distLeft = cx;
+                        const distRight = vw - cx;
+                        const distTop = cy;
+                        const distBottom = vh - cy;
+
+                        let dx = 0;
+                        let dy = 0;
+
+                        const minDist = Math.min(distLeft, distRight, distTop, distBottom);
+                        const extra = 30; // go a bit beyond edge
+
+                        if (minDist === distLeft) {
+                            dx = -(rect.left + rect.width + extra);
+                        } else if (minDist === distRight) {
+                            dx = vw - rect.left + extra;
+                        } else if (minDist === distTop) {
+                            dy = -(rect.top + rect.height + extra);
+                        } else {
+                            dy = vh - rect.top + extra;
+                        }
+
+                        sq.style.transition = 'transform 0.7s linear';
+                        sq.style.transform = `translate(${dx}px, ${dy}px)`;
+
+                        setTimeout(() => {
+                            if (sq.parentNode) {
+                                sq.parentNode.removeChild(sq);
+                            }
+                        }, 800);
+                    });
+                }
+
+                function start() {
+                    if (running) return;
+                    running = true;
+                    loop();
+                }
+
+                function stop() {
+                    if (!running) return;
+                    running = false;
+                    clearAllTimeouts();
+                    runSquaresOut();
+                }
+
+                function isRunning() {
+                    return running;
+                }
+
+                return { start, stop, isRunning };
+            })();
+
+            // Hook up the tiny red square (positioned randomly near the middle-right / bottom area)
+            const snailControl = document.getElementById('snailControl');
+            if (snailControl) {
+                // place the pixel in a loose band on the right / lower half of the screen
+                (function positionSnailControlRandomly() {
+                    const vw = window.innerWidth;
+                    const vh = window.innerHeight;
+
+                    const minX = vw * 0.65;
+                    const maxX = vw * 0.95;
+                    const minY = vh * 0.55;
+                    const maxY = vh * 0.9;
+
+                    const x = minX + Math.random() * (maxX - minX);
+                    const y = minY + Math.random() * (maxY - minY);
+
+                    snailControl.style.left = x + 'px';
+                    snailControl.style.top = y + 'px';
+                })();
+
+                snailControl.addEventListener('click', () => {
+                    if (!snailController.isRunning()) {
+                        snailController.start();
+                        snailControl.classList.add('is-active');
+                    } else {
+                        snailController.stop();
+                        snailControl.classList.remove('is-active');
+                    }
+                });
+            }
+
+            // Wandering green square that splashes like a waterdrop, then jumps somewhere else
+            (function initGreenDrop() {
+                const drop = document.getElementById('greenDrop');
+                if (!drop) return;
+
+                function positionRandomly() {
+                    const vw = window.innerWidth;
+                    const vh = window.innerHeight;
+                    const margin = 20;
+
+                    const maxX = Math.max(margin + 40, vw * 0.4);
+                    const maxY = Math.max(margin + 40, vh * 0.4);
+
+                    const x = margin + Math.random() * (maxX - margin);
+                    const y = margin + Math.random() * (maxY - margin);
+
+                    drop.style.left = x + 'px';
+                    drop.style.top = y + 'px';
+                }
+
+                function createRipple() {
+                    const rect = drop.getBoundingClientRect();
+                    const size = rect.width; // base "pixel" size
+
+                    // offsets in grid units around the center (0,0)
+                    const offsets = [
+                        { x: 0, y: 0 },
+                        { x: 1, y: 0 },
+                        { x: -1, y: 0 },
+                        { x: 0, y: 1 },
+                        { x: 0, y: -1 },
+                        { x: 1, y: 1 },
+                        { x: -1, y: 1 },
+                        { x: 1, y: -1 },
+                        { x: -1, y: -1 },
+                        { x: 2, y: 0 },
+                        { x: -2, y: 0 },
+                        { x: 0, y: 2 },
+                        { x: 0, y: -2 }
+                    ];
+
+                    offsets.forEach(({ x, y }) => {
+                        const distance = Math.max(Math.abs(x), Math.abs(y));
+                        const delay = distance * 0.08; // stagger from center outward
+                        
+                        const pixel = document.createElement('div');
+                        pixel.className = 'green-drop-ripple';
+                        pixel.style.width = size + 'px';
+                        pixel.style.height = size + 'px';
+                        pixel.style.left = (rect.left + x * size) + 'px';
+                        pixel.style.top = (rect.top + y * size) + 'px';
+                        pixel.style.animationDelay = delay + 's';
+
+                        document.body.appendChild(pixel);
+
+                        pixel.addEventListener('animationend', () => {
+                            if (pixel.parentNode) {
+                                pixel.parentNode.removeChild(pixel);
+                            }
+                        });
+                    });
+                }
+
+                let busy = false;
+
+                drop.addEventListener('click', () => {
+                    if (busy) return;
+                    busy = true;
+
+                    createRipple();
+                    drop.classList.add('is-hidden');
+
+                    setTimeout(() => {
+                        positionRandomly();
+                        drop.classList.remove('is-hidden');
+                        busy = false;
+                    }, 700);
+                });
+
+                positionRandomly();
+                window.addEventListener('resize', positionRandomly);
+            })();
+
+            // Pixel painting tool: full-page blue pixel drawing overlay
+            (function initPaintTool() {
+                const canvas = document.getElementById('paintCanvas');
+                const overlay = document.getElementById('paintOverlay');
+                const toggle = document.getElementById('paintToggle');
+                if (!canvas || !overlay || !toggle) return;
+
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+
+                const color = '#0071e3';
+                let isDrawing = false;
+                let undoStack = [];
+                let redoStack = [];
+
+                function resizeCanvas() {
+                    const baseWidth = 160;
+                    const baseHeight = 90;
+                    const aspect = window.innerWidth / window.innerHeight;
+                    const baseAspect = baseWidth / baseHeight;
+                    let width = baseWidth;
+                    let height = baseHeight;
+
+                    if (aspect > baseAspect) {
+                        width = Math.round(baseHeight * aspect);
+                        height = baseHeight;
+                    } else {
+                        width = baseWidth;
+                        height = Math.round(baseWidth / aspect);
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.imageSmoothingEnabled = false;
+                }
+
+                function clearHistory() {
+                    undoStack = [];
+                    redoStack = [];
+                }
+
+                function openOverlay() {
+                    resizeCanvas();
+                    overlay.classList.remove('is-passive');
+                    overlay.classList.add('is-active');
+                    toggle.setAttribute('aria-pressed', 'true');
+                }
+
+                function closeOverlay() {
+                    overlay.classList.remove('is-active');
+                    overlay.classList.add('is-passive');
+                    toggle.setAttribute('aria-pressed', 'false');
+                    isDrawing = false;
+                }
+
+                toggle.addEventListener('click', () => {
+                    if (overlay.classList.contains('is-active')) {
+                        closeOverlay();
+                    } else {
+                        openOverlay();
+                    }
+                });
+
+                window.addEventListener('resize', () => {
+                    if (overlay.classList.contains('is-active')) {
+                        resizeCanvas();
+                    }
+                });
+
+                function pushHistory() {
+                    try {
+                        const snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        undoStack.push(snapshot);
+                        if (undoStack.length > 40) {
+                            undoStack.shift();
+                        }
+                        redoStack = [];
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+
+                function setPixelFromEvent(evt) {
+                    if (!overlay.classList.contains('is-active')) return;
+                    const rect = canvas.getBoundingClientRect();
+                    if (!rect.width || !rect.height) return;
+                    const scaleX = canvas.width / rect.width;
+                    const scaleY = canvas.height / rect.height;
+                    const x = Math.floor((evt.clientX - rect.left) * scaleX);
+                    const y = Math.floor((evt.clientY - rect.top) * scaleY);
+
+                    ctx.fillStyle = color;
+                    ctx.fillRect(x, y, 1, 1); // one canvas pixel => bigger visual pixel via CSS scaling
+                }
+
+                canvas.addEventListener('mousedown', (evt) => {
+                    if (evt.button !== 0) return;
+                    if (!overlay.classList.contains('is-active')) return;
+                    pushHistory();
+                    isDrawing = true;
+                    setPixelFromEvent(evt);
+                });
+
+                window.addEventListener('mousemove', (evt) => {
+                    if (!isDrawing) return;
+                    setPixelFromEvent(evt);
+                });
+
+                window.addEventListener('mouseup', () => {
+                    isDrawing = false;
+                });
+
+                // removed undo/redo for simplified control
+
+                const screenshotBtn = document.getElementById('paintScreenshot');
+                const screenshotPreview = document.getElementById('screenshotPreview');
+                const screenshotPreviewImg = document.getElementById('screenshotPreviewImg');
+                const screenshotDownloadBtn = document.getElementById('screenshotDownloadBtn');
+                const screenshotCloseBtn = document.getElementById('screenshotCloseBtn');
+
+                if (screenshotBtn && typeof html2canvas === 'function') {
+                    screenshotBtn.addEventListener('click', () => {
+                        const dpr = window.devicePixelRatio || 1;
+                        const vw = window.innerWidth;
+                        const vh = window.innerHeight;
+                        html2canvas(document.body, {
+                            useCORS: true,
+                            allowTaint: true,
+                            scale: dpr,
+                            width: vw,
+                            height: vh,
+                            windowWidth: vw,
+                            windowHeight: vh,
+                            scrollX: window.scrollX,
+                            scrollY: window.scrollY,
+                            logging: false,
+                            ignoreElements: (el) => el.id === 'paintOverlay'
+                        }).then(screenshotCanvas => {
+                            if (canvas && (overlay.classList.contains('is-active') || overlay.classList.contains('is-passive'))) {
+                                const ctx = screenshotCanvas.getContext('2d');
+                                ctx.imageSmoothingEnabled = false;
+                                const rect = canvas.getBoundingClientRect();
+                                const scaleX = screenshotCanvas.width / vw;
+                                const scaleY = screenshotCanvas.height / vh;
+                                const dx = Math.round(rect.left * scaleX);
+                                const dy = Math.round(rect.top * scaleY);
+                                const dW = Math.round(rect.width * scaleX);
+                                const dH = Math.round(rect.height * scaleY);
+                                ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, dx, dy, dW, dH);
+                            }
+                            const dataUrl = screenshotCanvas.toDataURL('image/png');
+                            screenshotPreviewImg.src = dataUrl;
+                            screenshotPreview.classList.add('is-visible');
+                            screenshotDownloadBtn.onclick = () => {
+                                const link = document.createElement('a');
+                                link.download = 'admin-screenshot-' + Date.now() + '.png';
+                                link.href = dataUrl;
+                                link.click();
+                            };
+                        }).catch(() => {});
+                    });
+                }
+
+                if (screenshotCloseBtn && screenshotPreview) {
+                    screenshotCloseBtn.addEventListener('click', () => {
+                        screenshotPreview.classList.remove('is-visible');
+                    });
+                    screenshotPreview.addEventListener('click', (e) => {
+                        if (e.target === screenshotPreview) {
+                            screenshotPreview.classList.remove('is-visible');
+                        }
+                    });
+                }
+
+                document.addEventListener('keydown', (evt) => {
+                    if (evt.key === 'Escape' && overlay.classList.contains('is-active')) {
+                        closeOverlay();
+                    }
+                });
+            })();
+            (function () {
+                var container = document.getElementById('rightLines');
+                if (!container) return;
+                function fill() {
+                    var target = window.innerHeight;
+                    var i = 0;
+                    var items = Array.prototype.slice.call(container.children);
+                    while (container.scrollHeight < target && items.length) {
+                        container.appendChild(items[i % items.length].cloneNode(true));
+                        i++;
+                    }
+                }
+                fill();
+                function startTyping() {
+                    var lines = Array.prototype.slice.call(container.children);
+                    lines.forEach(function (el, idx) {
+                        var txt = el.getAttribute('data-text') || el.textContent;
+                        if (!el.getAttribute('data-text')) el.setAttribute('data-text', txt);
+                        el.textContent = '';
+                        var i = 0;
+                        function step() {
+                            if (i <= txt.length) {
+                                el.textContent = txt.slice(0, i);
+                                i++;
+                                setTimeout(step, 20);
+                            }
+                        }
+                        setTimeout(step, idx * 120);
+                    });
+                }
+                window.addEventListener('site:page-second', startTyping);
+                window.addEventListener('resize', fill);
+            })();
+            (function () {
+                var overlay = document.getElementById('startOverlay');
+                if (!overlay) return;
+                var title = document.getElementById('startTitle');
+                
+                function animateWall() {
+                    var wall = document.getElementById('wallOverlay');
+                    var img = document.getElementById('wallImage');
+                    if (!wall || !img) {
+                        document.body.classList.add('site-active');
+                        var cursor = document.getElementById('cursor-overlay');
+                        if (cursor) cursor.style.zIndex = '';
+                        return;
+                    }
+                    
+                    var position = 0;
+                    var duration = 3000; // 3 seconds
+                    var fps = 12;
+                    var totalFrames = duration / 1000 * fps;
+                    var step = 100 / totalFrames; // % per frame
+                    var interval = 1000 / fps;
+                    
+                    var timer = setInterval(function() {
+                        position -= step;
+                        img.style.transform = 'translateY(' + position + '%)';
+                        
+                        if (position <= -100) {
+                            clearInterval(timer);
+                            if (wall.parentNode) wall.parentNode.removeChild(wall);
+                            document.body.classList.add('site-active');
+                            var cursor = document.getElementById('cursor-overlay');
+                            if (cursor) cursor.style.zIndex = '';
+                        }
+                    }, interval);
+                }
+
+                function openCurtain() {
+                    // Play intro sound
+                    var audio = new Audio('https://raw.githubusercontent.com/git34r/hello-world/main/Content/webaudio/websiteintro.mp3');
+                    audio.volume = 1.0;
+                    audio.play().catch(function(e) { console.log('Audio play failed', e); });
+
+                    if (title) {
+                        var prev = title.textContent;
+                        
+                        // Create clone for animation to be above cursor
+                        var clone = title.cloneNode(true);
+                        clone.textContent = '>.<';
+                        clone.style.position = 'fixed';
+                        clone.style.top = '50%';
+                        clone.style.left = '50%';
+                        clone.style.margin = '0';
+                        clone.style.zIndex = '10000000';
+                        clone.style.pointerEvents = 'none';
+                        clone.classList.add('is-animating');
+                        document.body.appendChild(clone);
+                        
+                        // Hide original title
+                        title.style.opacity = '0';
+
+                        setTimeout(function () {
+                            // Remove overlay immediately to reveal wall
+                            if (clone && clone.parentNode) clone.parentNode.removeChild(clone);
+                            overlay.parentNode && overlay.parentNode.removeChild(overlay);
+                            
+                            // Hide cursor behind wall
+                            var cursor = document.getElementById('cursor-overlay');
+                            if (cursor) cursor.style.zIndex = '1';
+
+                            if (title) {
+                                title.textContent = prev;
+                                title.style.opacity = '';
+                            }
+                            try { window.dispatchEvent(new Event('overlay:closed')); } catch (e) {}
+                            
+                            // Wait 1 second then animate wall
+                            setTimeout(animateWall, 1000);
+                        }, 3000);
+                    } else {
+                        setTimeout(function () {
+                            overlay.parentNode && overlay.parentNode.removeChild(overlay);
+                            
+                            // Hide cursor behind wall
+                            var cursor = document.getElementById('cursor-overlay');
+                            if (cursor) cursor.style.zIndex = '1';
+
+                            try { window.dispatchEvent(new Event('overlay:closed')); } catch (e) {}
+                            setTimeout(animateWall, 1000);
+                        }, 3000);
+                    }
+                }
+                overlay.addEventListener('click', openCurtain);
+                if (title) title.addEventListener('click', openCurtain);
+            })();
+            (function () {
+                var wrapper = document.getElementById('site-wrapper');
+                if (!wrapper) return;
+                var down = document.getElementById('arrowDown');
+                var up = document.getElementById('arrowUp');
+                function toSecond() { requestAnimationFrame(function(){ wrapper.classList.add('is-second'); window.dispatchEvent(new Event('site:page-second')); }); }
+                function toFirst() { requestAnimationFrame(function(){ wrapper.classList.remove('is-second'); }); }
+                if (down) down.addEventListener('click', toSecond);
+                if (up) up.addEventListener('click', toFirst);
+                window.addEventListener('wheel', function (e) { e.preventDefault(); }, { passive: false });
+            })();
+        })();
+
+        (function vapeCircleHover() {
+            var folder = document.getElementById('folderVape');
+            var circle = document.getElementById('vapeCircle');
+            if (!folder || !circle) return;
+            function move(e) {
+                circle.style.left = e.clientX + 'px';
+                circle.style.top = e.clientY + 'px';
+            }
+            folder.addEventListener('mouseenter', function () {
+                circle.classList.add('is-active');
+                document.addEventListener('mousemove', move);
+            });
+            folder.addEventListener('mouseleave', function () {
+                circle.classList.remove('is-active');
+                document.removeEventListener('mousemove', move);
+            });
+        })();
+    </script>
+</body>
+</html>
